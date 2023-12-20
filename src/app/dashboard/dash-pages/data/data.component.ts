@@ -56,6 +56,7 @@ export class DataComponent implements OnInit{
 
   ngOnInit() {
     this.retrievingValues();
+    console.log("Intial Page!!");
   }
 
   getUserDevices() {
@@ -93,6 +94,7 @@ export class DataComponent implements OnInit{
   }
 
   retrievingValues(){
+    this.loading1 = true;
     this.deviceID = this.DashDataService.getDeviceId() || '';
     this.DeviceType = this.DashDataService.getDeviceType() || '';
     this.deviceINTERVAL = this.DashDataService.getInterval() || '';

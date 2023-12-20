@@ -15,7 +15,7 @@ import { DatePipe } from '@angular/common';
 export class FilterComponent {
 
   CompanyEmail!: string | null;
-  selectedDevice!: FormControl;
+  selectedDevice = new FormControl('', [Validators.required]);
   selectedDeviceInterval!: string;
   deviceOptions: any[] = [];
   selectedRadioButton!: string;

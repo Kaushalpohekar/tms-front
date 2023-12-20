@@ -60,8 +60,8 @@
                   <div class="image-text-ws">{{ consumptionData[getIndexConsumption(device.DeviceUID)]?.todayConsumption|| 0 }} L</div>
                   <div class="image-text-ws-2">
                     <span class="{{ consumptionData[getIndexConsumption(device.DeviceUID)]?.percentageChange >= 0 ? 'up' : 'down' }}">
-                      {{ getAbsPercentageChange(consumptionData[getIndexConsumption(device.DeviceUID)]?.percentageChange).arrow }}
-                      {{ getAbsPercentageChange(consumptionData[getIndexConsumption(device.DeviceUID)]?.percentageChange).value || 0 }}%
+                      {{ getAbsPercentageChange(consumptionData[getIndexConsumption(device.DeviceUID)]?.dailyPercentageChange).arrow }}
+                      {{ getAbsPercentageChange(consumptionData[getIndexConsumption(device.DeviceUID)]?.dailyPercentageChange).value || 0 }}%
                     </span>
                     Today
                   </div>

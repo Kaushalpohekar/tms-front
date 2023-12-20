@@ -8,11 +8,14 @@
     <div class="col-lg-12 mb-1">
       <mat-form-field appearance="outline" class="from-field">
         <mat-label>Device Name</mat-label>
-        <mat-select required [(ngModel)]="selectedDevice">
+        <mat-select required [formControl]="selectedDevice" [(ngModel)]="deviceName">
           <mat-option *ngFor="let device of deviceOptions" [value]="device.DeviceName" (click)="open(device)">
             {{ device.DeviceName }}
           </mat-option>
         </mat-select>
+        <mat-error *ngIf="selectedDevice.invalid">
+          Please select a device.
+        </mat-error>
       </mat-form-field>
     </div>
     <div class="col-lg-12 mb-1">
