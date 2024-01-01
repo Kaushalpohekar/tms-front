@@ -49,7 +49,8 @@ export class FilterComponent {
     this.deviceUID = this.DashDataService.getDeviceId() || '';
     this.deviceName = this.DashDataService.getDeviceName() || '';
     this.deviceInterval = this.DashDataService.getInterval() || '';
-    if(this.deviceUID && this.deviceName && this.deviceInterval){
+    this.deviceType = this.DashDataService.getDeviceType() || '';
+    if(this.deviceUID && this.deviceName && this.deviceInterval && this.deviceType){
       if(this.deviceInterval === "Custom"){
         this.selectedRadioButton = 'Custom';
       } else{
@@ -140,15 +141,18 @@ export class FilterComponent {
   onSaveClick(): void {
     if(this.selectedRadioButton==='Custom'){
       if(this.start_date.valid && this.end_date.valid){
-        this.DashDataService.setDeviceId(this.deviceUID);
-        this.DashDataService.setDeviceName(this.deviceName);
-        this.DashDataService.setInterval('Custom');
-        this.DashDataService.setDeviceType(this.deviceType);
-        const start = this.datePipe.transform(this.start_date.value, 'yyyy-M-d')!;
-        this.DashDataService.setStartDate(start);
-        const end = this.datePipe.transform(this.end_date.value, 'yyyy-M-d')!;
-        this.DashDataService.setEndDate(end);
-        this.dialogRef.close();
+        setTimeout(() => {
+          this.DashDataService.setDeviceId(this.deviceUID);
+          this.DashDataService.setDeviceName(this.deviceName);
+          this.DashDataService.setInterval('Custom');
+          this.DashDataService.setDeviceType(this.deviceType);
+          console.log(this.deviceType);
+          const start = this.datePipe.transform(this.start_date.value, 'yyyy-M-d')!;
+          this.DashDataService.setStartDate(start);
+          const end = this.datePipe.transform(this.end_date.value, 'yyyy-M-d')!;
+          this.DashDataService.setEndDate(end);
+          this.dialogRef.close();
+        }, 100);
       }
       else{
         this.snackBar.open('Please Select appropriate values!', 'Dismiss', {
@@ -157,13 +161,16 @@ export class FilterComponent {
       }      
     }
     else if(this.selectedRadioButton==='Last'){
-      this.DashDataService.setDeviceId(this.deviceUID);
-      this.DashDataService.setDeviceName(this.deviceName);
-      this.DashDataService.setInterval(this.selectedDeviceInterval);
-      this.DashDataService.setDeviceType(this.deviceType);
-      this.DashDataService.setStartDate('');
-      this.DashDataService.setEndDate('');
-      this.dialogRef.close();
+      setTimeout(() => {
+        this.DashDataService.setDeviceId(this.deviceUID);
+        this.DashDataService.setDeviceName(this.deviceName);
+        this.DashDataService.setInterval(this.selectedDeviceInterval);
+        this.DashDataService.setDeviceType(this.deviceType);
+        console.log(this.deviceType);
+        this.DashDataService.setStartDate('');
+        this.DashDataService.setEndDate('');
+        this.dialogRef.close();
+      }, 100);
     } 
   }    
 }

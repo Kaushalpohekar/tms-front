@@ -29,6 +29,7 @@ export class DashDataService {
   }
 
   setDeviceType(deviceType: string) {
+    console.log(deviceType);
     sessionStorage.setItem('filterDeviceType', deviceType);
   }
 
