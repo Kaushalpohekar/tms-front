@@ -169,11 +169,15 @@ export class DashDataService {
     return this.http.get(`${this.API_URL}/Total-Volume-Month-Email/${CompanyEmail}`);
   }
   
-  getIntervalConsuption( deviceId : string, duration: any ): Observable <any>{
+  getIntervalConsumption( deviceId : string, duration: any ): Observable <any>{
     return this.http.get(`${this.API_URL}/ConsuptionByIntervalBar/${deviceId}?interval=${duration}`);
   }
 
   getCustomConsumption(deviceId: string, startDate:any, endDate: any): Observable <any>{
     return this.http.get(`${this.API_URL}/ConsuptionByCustomBar/${deviceId}/${startDate}/${endDate}`);
   } 
+
+  getTotalConsumpion(deviceId: string): Observable<any>{
+    return this.http.get(`${this.API_URL}/FetchTodayConsumption/${deviceId}`);
+  }
 }

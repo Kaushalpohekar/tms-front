@@ -58,13 +58,9 @@
   text-fill-color: transparent;
 }
 
-.panel {
-  display: flex;
-  justify-content: space-between;
-}
 
 .panel-device-name {
-  background: linear-gradient(to right, #3F51B5, #66BB6A);
+  background: linear-gradient(to right, #3F51B5, #125ee0);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -133,12 +129,74 @@
 }
 
 
+.temp{	
+	font-size: 1.2rem;
+	font-weight: 550;
+}
+
+.ryb-th-t{
+	background: linear-gradient(to right, #0572a1, #4291b3, #6598ad);
+  -webkit-background-clip: text; /* For WebKit/Blink browsers like Chrome and Safari */
+  background-clip: text;
+  color: transparent; /* Make the text transparent */
+}
+
+.ryb-alert{
+	background: linear-gradient(to right, #eb4034, #d4857f, #ff0000);
+  -webkit-background-clip: text; /* For WebKit/Blink browsers like Chrome and Safari */
+  background-clip: text;
+  color: transparent; /* Make the text transparent */
+}
+	
+.th-temp{
+	background: linear-gradient(to right, #eb4034, #d4857f, #ff0000);
+  -webkit-background-clip: text; /* For WebKit/Blink browsers like Chrome and Safari */
+  background-clip: text;
+  color: transparent; /* Make the text transparent */
+}
+
+.th-hum{
+	background: linear-gradient(to right, #0572a1, #4291b3, #6598ad);
+  -webkit-background-clip: text; /* For WebKit/Blink browsers like Chrome and Safari */
+  background-clip: text;
+  color: transparent; /* Make the text transparent */
+}
+
+.t{
+	background: linear-gradient(to right, #eb4034, #d4857f, #ff0000);
+  -webkit-background-clip: text; /* For WebKit/Blink browsers like Chrome and Safari */
+  background-clip: text;
+  color: transparent; /* Make the text transparent */
+}
+	
+.ws{
+	background: linear-gradient(to right, #eb4034, #d4857f, #ff0000);
+  -webkit-background-clip: text; /* For WebKit/Blink browsers like Chrome and Safari */
+  background-clip: text;
+  color: transparent; /* Make the text transparent */
+}
+
+.fs{
+	background: linear-gradient(to right, #eb4034, #d4857f, #ff0000);
+  -webkit-background-clip: text; /* For WebKit/Blink browsers like Chrome and Safari */
+  background-clip: text;
+  color: transparent; /* Make the text transparent */
+}
+
+.interval{
+	font-size: 1rem;
+	font-weight: 550;
+}
 
 
 @media(max-width:425px){
 	.data{
 		padding-top: 75px;
 		padding-bottom: 20px;
+	}
+	.data-charts{
+		height: auto;
+		width: 100%;
 	}
 }
 
@@ -147,12 +205,20 @@
 		padding-top: 75px;
 		padding-bottom: 20px;
 	}
+	.data-charts{
+		height: auto;
+		width: 100%;
+	}
 }
 
 @media(min-width:576px) and (max-width:1024px){
 	.data{
 		padding-top: 75px;
 		padding-bottom: 20px;
+	}
+	.data-charts{
+		height: auto;
+		width: 100%;
 	}
 }
 

@@ -46,7 +46,13 @@ export class DataComponent implements OnInit{
   loading1 = true;
   selectedStartDate!: any;
   selectedEndDate!:any;
-
+  DeviceTemperature!: any;
+  DeviceTemperatureR!: any;
+  DeviceTemperatureY!: any;
+  DeviceTemperatureB!: any;
+  DeviceHumidity!: any;
+  DeviceFlowRate !: any;
+  DeviceTodayConsumption!: any;
   // new constants
 
   deviceID!:string;
@@ -59,6 +65,33 @@ export class DataComponent implements OnInit{
     console.log("Intial Page!!");
   }
 
+  getDisplayText(): string {
+    switch (this.deviceINTERVAL) {
+      case '1hour':
+        return '1 Hour';
+      case '12hour':
+        return '12 Hours';
+      case '1day':
+        return '1 Day';
+      case '7day':
+        return '7 Days';
+      case '30day':
+        return '30 Days';
+      default:
+        return ''; // You can provide a default value or handle it as needed
+    }
+  }
+
+  getFormattedDateRange(): string {
+    const startDate = new Date(this.deviceSTART);
+    const endDate = new Date(this.deviceEND);
+
+    const startMonth = startDate.toLocaleString('default', { month: 'short' });
+    const endMonth = endDate.toLocaleString('default', { month: 'short' });
+
+    return `${startMonth} ${startDate.getDate()}, ${startDate.getFullYear()} to ${endMonth} ${endDate.getDate()}, ${endDate.getFullYear()}`;
+  }
+  
   getUserDevices() {
     this.CompanyEmail = this.authService.getCompanyEmail();
     if (this.CompanyEmail) {
@@ -110,34 +143,32 @@ export class DataComponent implements OnInit{
     }, 100);
   }
 
+
   async retrievingAllValues() {
     try {
-      let dataWSPromise, dataPromise, dataStatusPromise;
+      let dataWSPromise, dataPromise;
       if (this.DeviceType === 'ws' || this.DeviceType === 'fs') {
         if (this.deviceINTERVAL === 'Custom') {
           dataWSPromise = this.DashDataService.getCustomConsumption(this.deviceID, this.deviceSTART, this.deviceEND).toPromise();
+        } else {
+          dataWSPromise = this.DashDataService.getIntervalConsumption(this.deviceID, this.deviceINTERVAL).toPromise();
         }
+
         dataPromise = this.deviceINTERVAL === 'Custom' ?
           this.DashDataService.DataByCustomDate(this.deviceID, this.deviceSTART, this.deviceEND).toPromise() :
           this.DashDataService.dataLast(this.deviceID, this.deviceINTERVAL).toPromise();
-        dataStatusPromise = this.deviceINTERVAL === 'Custom' ?
-          this.DashDataService.DataByCustomDateStatus(this.deviceID, this.deviceSTART, this.deviceEND).toPromise() :
-          this.DashDataService.dataLastStatus(this.deviceID, this.deviceINTERVAL).toPromise();
       } else if (this.DeviceType === 't' || this.DeviceType === 'th' || this.DeviceType === 'ryb') {
         dataPromise = this.deviceINTERVAL === 'Custom' ?
           this.DashDataService.DataByCustomDate(this.deviceID, this.deviceSTART, this.deviceEND).toPromise() :
           this.DashDataService.dataLast(this.deviceID, this.deviceINTERVAL).toPromise();
-        dataStatusPromise = this.deviceINTERVAL === 'Custom' ?
-          this.DashDataService.DataByCustomDateStatus(this.deviceID, this.deviceSTART, this.deviceEND).toPromise() :
-          this.DashDataService.dataLastStatus(this.deviceID, this.deviceINTERVAL).toPromise();
       }
 
       // Concurrently await all promises
-      const [dataWS, data, dataStatus] = await Promise.all([dataWSPromise, dataPromise, dataStatusPromise]);
+      const [dataWS, data] = await Promise.all([dataWSPromise, dataPromise]);
 
+      console.log(data);
       // Process the data and perform other actions
       this.processChartData(data);
-      this.createDonutChart(dataStatus.dataStatus);
       if (dataWS) {
         console.log(dataWS);
         this.processChartDataWS(dataWS);
@@ -151,8 +182,6 @@ export class DataComponent implements OnInit{
       });
     }
   }
-
-
 
   createDonutChart(dataStatus: any) {
     const donutChartData = dataStatus.map((entry: any) => {
@@ -265,6 +294,9 @@ export class DataComponent implements OnInit{
             ],
           },
           data: this.temperatureData,
+          marker: {
+            radius: 3, // Set the desired size of the points
+          },
         },
       ] as any,
     } as Highcharts.Options);
@@ -306,6 +338,9 @@ export class DataComponent implements OnInit{
             ],
           },
           data: this.humidityData,
+          marker: {
+            radius: 3, // Set the desired size of the points
+          },
         },
       ] as any,
     } as Highcharts.Options);
@@ -348,6 +383,9 @@ export class DataComponent implements OnInit{
             ],
           },
           data: this.flowRateData,
+          marker: {
+            radius: 3, // Set the desired size of the points
+          },
         },
       ] as any,
     } as Highcharts.Options);
@@ -386,7 +424,10 @@ export class DataComponent implements OnInit{
             ],
           },
           data: this.temperatureRData,
-          lineWidth: 3, // Set the line width to triple
+          marker: {
+            radius: 3, // Set the desired size of the points
+          },
+          lineWidth: 2, // Set the line width to triple
         },
         {
           name: 'Temperature B',
@@ -398,7 +439,10 @@ export class DataComponent implements OnInit{
             ],
           },
           data: this.temperatureBData,
-          lineWidth: 3, // Set the line width to triple
+          marker: {
+            radius: 3, // Set the desired size of the points
+          },
+          lineWidth: 2, // Set the line width to triple
         },
         {
           name: 'Temperature Y',
@@ -410,7 +454,10 @@ export class DataComponent implements OnInit{
             ],
           },
           data: this.temperatureYData,
-          lineWidth: 3, // Set the line width to triple
+          marker: {
+            radius: 3, // Set the desired size of the points
+          },
+          lineWidth: 2, // Set the line width to triple
         },
       ] as any,
     } as Highcharts.Options);
@@ -470,42 +517,42 @@ export class DataComponent implements OnInit{
     });
   }
 
-processChartData(response: any) {
-  const data = response.data;
-  const istOffset = 5.5 * 60 * 60 * 1000; // IST offset: +5:30 in milliseconds
+  processChartData(response: any) {
+    const data = response.data;
+    const istOffset = 5.5 * 60 * 60 * 1000; // IST offset: +5:30 in milliseconds
 
-  const mapData = (entry: any, key: string) => [
-    new Date(entry.bucket_start_time).getTime() + istOffset,
-    key ? parseFloat(entry[key]) : entry[key],
-  ];
+    const mapData = (entry: any, key: string) => [
+      new Date(entry.bucket_start_time).getTime() + istOffset,
+      key ? parseFloat(entry[key]) : entry[key],
+    ];
 
-  this.temperatureData = data.map((entry: any) => mapData(entry, 'Temperature'));
-  this.humidityData = data.map((entry: any) => mapData(entry, 'Humidity'));
-  this.temperatureRData = data.map((entry: any) => mapData(entry, 'TemperatureR'));
-  this.temperatureYData = data.map((entry: any) => mapData(entry, 'TemperatureY'));
-  this.temperatureBData = data.map((entry: any) => mapData(entry, 'TemperatureB'));
-  this.timestampData = data.map((entry: any) => new Date(entry.bucket_start_time).getTime() + istOffset);
-  this.flowRateData = data.map((entry: any) => mapData(entry, 'flowRate'));
+    this.temperatureData = data.map((entry: any) => mapData(entry, 'Temperature'));
+    this.humidityData = data.map((entry: any) => mapData(entry, 'Humidity'));
+    this.temperatureRData = data.map((entry: any) => mapData(entry, 'TemperatureR'));
+    this.temperatureYData = data.map((entry: any) => mapData(entry, 'TemperatureY'));
+    this.temperatureBData = data.map((entry: any) => mapData(entry, 'TemperatureB'));
+    this.timestampData = data.map((entry: any) => new Date(entry.bucket_start_time).getTime() + istOffset);
+    this.flowRateData = data.map((entry: any) => mapData(entry, 'flowRate'));
 
-  switch (this.DeviceType) {
-    case 'th':
-      this.createChart();
-      this.createChart2();
-      break;
-    case 't':
-      this.createChart();
-      break;
-    case 'ryb':
-      this.createTemperature();
-      break;
-    case 'ws':
-      this.createChart3();
-      this.createBarGraph();
-      break;
-    default:
-      this.snackBar.open('Device Type is not found!', 'Dismiss', { duration: 2000 });
+    switch (this.DeviceType) {
+      case 'th':
+        this.createChart();
+        this.createChart2();
+        break;
+      case 't':
+        this.createChart();
+        break;
+      case 'ryb':
+        this.createTemperature();
+        break;
+      case 'ws':
+        this.createChart3();
+        this.createBarGraph();
+        break;
+      default:
+        this.snackBar.open('Device Type is not found!', 'Dismiss', { duration: 2000 });
+    }
   }
-}
 
   processChartDataWS(response: any) {
     const data = response.data;
@@ -527,10 +574,28 @@ processChartData(response: any) {
           (dataStatusResult: any) => {
             this.DeviceStatus = dataStatusResult[0].Status;
             const lastUpdatedTime = dataStatusResult[0].TimeStamp;
+            this.DeviceTemperature = dataStatusResult[0].Temperature;
+            this.DeviceTemperatureR = parseFloat(dataStatusResult[0].TemperatureR);
+            this.DeviceTemperatureY = parseFloat(dataStatusResult[0].TemperatureY);
+            this.DeviceTemperatureB = parseFloat(dataStatusResult[0].TemperatureB);
+            this.DeviceHumidity = dataStatusResult[0].Humidity;
+            this.DeviceFlowRate = dataStatusResult[0].flowRate;
+
             this.DeviceLastUpdatedTime = this.formatTime(lastUpdatedTime);
             this.DashDataService.deviceTrigger(deviceId).subscribe(
               (deviceTriggerResult: any) => {
                 this.DeviceTrigger = deviceTriggerResult[0].TriggerValue;
+                if(this.DeviceType === 'ws' || this.DeviceType === 'fs'){
+                  this.DashDataService.getTotalConsumpion(deviceId).subscribe(
+                    (deviceConsumtion: any) => {
+                      if (deviceConsumtion.length > 0 && deviceConsumtion[0].totalVolume !== undefined && deviceConsumtion[0].totalVolume !== null && deviceConsumtion[0].totalVolume !== 0) {
+                          this.DeviceTodayConsumption = (deviceConsumtion[0].totalVolume / 1000).toFixed(2);
+                      } else {
+                          this.DeviceTodayConsumption = 0;
+                      }
+                    }
+                  );
+                }
                 this.loading1 = false;
               }
             );
@@ -547,7 +612,8 @@ processChartData(response: any) {
 
   formatTime(lastUpdatedTime: string): string {
     const currentTime = new Date();
-    const updatedTime = new Date(lastUpdatedTime);
+    const offset = 5.5 * 60 * 60 * 1000; // 5.5 hours in milliseconds
+    const updatedTime = new Date(new Date(lastUpdatedTime).getTime() + offset);
     const diff = Math.abs(currentTime.getTime() - updatedTime.getTime()) / 1000; // Time difference in seconds
 
     if (diff < 60) {
@@ -559,10 +625,7 @@ processChartData(response: any) {
       const hours = Math.floor(diff / 3600);
       return `${hours} hour ago`;
     } else {
-      const formattedTime = this.datePipe.transform(
-        updatedTime,
-        'yyyy-MM-dd hh:mm:ss'
-      );
+      const formattedTime = this.datePipe.transform(updatedTime, 'yyyy-MM-dd hh:mm:ss');
       return formattedTime || '';
     }
   }

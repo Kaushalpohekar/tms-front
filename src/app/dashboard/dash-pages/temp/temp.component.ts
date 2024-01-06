@@ -21,6 +21,8 @@ export class TempComponent implements OnInit, OnDestroy {
   deviceData: any[] = [];
   userDevicesTrigger: any[] = [];
   consumptionData: any[] = [];
+  fname!: string;
+  lname!: string;
 
   constructor(
     public dialog: MatDialog,
@@ -43,7 +45,9 @@ export class TempComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.getUserDevices();
     this.getUserDevicesTrigger();
-    this.CombinedConsumption();
+    setTimeout(() => {
+        this.CombinedConsumption();
+    }, 100);
     this.dashService.isPageLoading(true);
   }
 
@@ -204,69 +208,82 @@ export class TempComponent implements OnInit, OnDestroy {
     return this.consumptionData.findIndex(device => device.DeviceUID === deviceUid);
   }
 
-  CombinedConsumption() {
-    if (this.CompanyEmail) {
-      this.dashDataService.getTodayConsumption(this.CompanyEmail).subscribe(
-        (todayData: any[]) => {
-          this.consumptionData = [];
+CombinedConsumption() {
+  if (this.CompanyEmail) {
+    this.dashDataService.getTodayConsumption(this.CompanyEmail)
+      .toPromise()
+      .then((todayData: any[]) => {
+        this.consumptionData = [];
 
-          // Loop through each device for today's consumption
-          todayData.forEach((dailyConsumptionData, index) => {
-            const deviceInfo = Object.keys(dailyConsumptionData)[0];
-            const today = dailyConsumptionData[deviceInfo][0].today;
-            const yesterday = dailyConsumptionData[deviceInfo][0].yesterday;
+        // Create an array of promises for fetching monthly consumption data
+        const monthlyPromises = todayData.map((dailyConsumptionData, index) => {
+          const deviceInfo = Object.keys(dailyConsumptionData)[0];
+          const today = dailyConsumptionData[deviceInfo][0].today;
+          const yesterday = dailyConsumptionData[deviceInfo][0].yesterday;
 
-            // Calculate daily percentage change
-            let dailyPercentageChange: number;
-            if (yesterday !== 0) {
-              dailyPercentageChange = ((today - yesterday) / yesterday) * 100;
-            } else {
-              dailyPercentageChange = 100;
-            }
+          // Calculate daily percentage change
+          let dailyPercentageChange: number;
+          if (yesterday !== 0) {
+            dailyPercentageChange = ((today - yesterday) / yesterday) * 100;
+          } else {
+            dailyPercentageChange = 100;
+          }
 
-            // Fetch monthly consumption data for the same device
-            if (this.CompanyEmail) {
-              this.dashDataService.getMonthConsumption(this.CompanyEmail).subscribe(
-                (monthData: any[]) => {
-                  const monthlyConsumptionData = monthData[index][deviceInfo][0];
-                  const thisMonth = monthlyConsumptionData.thisMonth;
-                  const lastMonth = monthlyConsumptionData.lastMonth;
+          // Fetch monthly consumption data for the same device only if CompanyEmail is not null
+          if (this.CompanyEmail) {
+            return this.dashDataService.getMonthConsumption(this.CompanyEmail)
+              .toPromise()
+              .then((monthData: any[]) => {
+                const monthlyConsumptionData = monthData[index][deviceInfo][0];
+                const thisMonth = monthlyConsumptionData.thisMonth;
+                const lastMonth = monthlyConsumptionData.lastMonth;
 
-                  // Calculate monthly percentage change
-                  let monthlyPercentageChange: number;
-                  if (lastMonth !== 0) {
-                    monthlyPercentageChange = ((thisMonth - lastMonth) / lastMonth) * 100;
-                  } else {
-                    monthlyPercentageChange = 100;
-                  }
-
-                  // Create an object with combined information
-                  const deviceInfoObject = {
-                    DeviceUID: deviceInfo,
-                    todayConsumption: today,
-                    yesterdayConsumption: yesterday,
-                    dailyPercentageChange: dailyPercentageChange,
-                    thisMonthConsumption: (thisMonth / 1000).toFixed(0),
-                    lastMonthConsumption: (lastMonth / 1000).toFixed(0),
-                    monthlyPercentageChange: monthlyPercentageChange
-                  };
-
-                  // Push the device object to the array
-                  this.consumptionData.push(deviceInfoObject);
-                },
-                (monthError) => {
-                  console.log(monthError);
+                // Calculate monthly percentage change
+                let monthlyPercentageChange: number;
+                if (lastMonth !== 0) {
+                  monthlyPercentageChange = ((thisMonth - lastMonth) / lastMonth) * 100;
+                } else {
+                  monthlyPercentageChange = 100;
                 }
-              );
-            }
-          });
-        },
-        (todayError) => {
-          console.log(todayError);
-        }
-      );
-    }
+
+                // Create an object with combined information
+                const deviceInfoObject = {
+                  DeviceUID: deviceInfo,
+                  todayConsumption: today,
+                  yesterdayConsumption: yesterday,
+                  dailyPercentageChange: dailyPercentageChange,
+                  thisMonthConsumption: (thisMonth / 1000).toFixed(0),
+                  lastMonthConsumption: (lastMonth / 1000).toFixed(0),
+                  monthlyPercentageChange: monthlyPercentageChange
+                };
+
+                // Push the device object to the array
+                this.consumptionData.push(deviceInfoObject);
+              })
+              .catch((monthError) => {
+                console.log(monthError);
+              });
+          } else {
+            // Handle the case where CompanyEmail is null
+            console.log("CompanyEmail is null.");
+            return Promise.resolve();
+          }
+        });
+
+        // Use Promise.all() to wait for all monthly promises to resolve
+        return Promise.all(monthlyPromises);
+      })
+      .then(() => {
+        // All monthly promises have resolved, and data has been collected for all devices
+        console.log("All data fetched successfully:", this.consumptionData);
+      })
+      .catch((error) => {
+        console.log("Error:", error);
+      });
   }
+}
+
+
 
   getAbsPercentageChange(percentageChange: number | undefined): { value: number | undefined, arrow: string } {
     const absValue = percentageChange ? Math.floor(Math.abs(percentageChange)) : undefined;

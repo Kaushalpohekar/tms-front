@@ -75,7 +75,6 @@ export class ProfileComponent implements OnInit{
         duration: 2000
         });
     }
-
   }
 
   updatePersonal() {

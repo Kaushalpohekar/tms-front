@@ -12,7 +12,7 @@ import { MqttModule, IMqttServiceOptions } from 'ngx-mqtt';
 import { HashLocationStrategy,LocationStrategy } from '@angular/common';
 
 const MQTT_SERVICE_OPTIONS: IMqttServiceOptions = {
-  hostname: 'dashboard.senselive.in',
+  hostname: '43.204.219.125',
   port: 9001,
   protocol: 'ws',
   username: 'Sense2023',
