@@ -65,8 +65,8 @@ export class DashDataService {
     throw new Error('Method not implemented.');
   }
 
-  private readonly API_URL = 'https://ec2-13-200-38-129.ap-south-1.compute.amazonaws.com:3000';
-  // private readonly API_URL = 'http://localhost:3000';
+  //private readonly API_URL = 'https://ec2-13-200-38-129.ap-south-1.compute.amazonaws.com:3000';
+   private readonly API_URL = 'http://localhost:3000';
 
   userDevices(CompanyEmail: string): Observable<any> {
     return this.http.get(`${this.API_URL}/userdevices/${CompanyEmail}`);
@@ -178,5 +178,9 @@ export class DashDataService {
 
   getTotalConsumpion(deviceId: string): Observable<any>{
     return this.http.get(`${this.API_URL}/FetchTodayConsumption/${deviceId}`);
+  }
+
+  getDeviceData(CompanyEmail: string): Observable <any> {
+    return this.http.get(`${this.API_URL}/fetchLatestEntry/${CompanyEmail}`);
   }
 }

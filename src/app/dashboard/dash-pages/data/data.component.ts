@@ -62,7 +62,6 @@ export class DataComponent implements OnInit{
 
   ngOnInit() {
     this.retrievingValues();
-    console.log("Intial Page!!");
   }
 
   getDisplayText(): string {
@@ -135,7 +134,6 @@ export class DataComponent implements OnInit{
     this.deviceEND = this.DashDataService.getEndDate() || '';
     setTimeout(() => { 
       if(this.deviceID && this.DeviceType && this.deviceINTERVAL){
-        console.log(this.deviceID,this.DeviceType, this.deviceINTERVAL);
         this.retrievingAllValues();
       }  else{
         this.getUserDevices();
@@ -165,12 +163,9 @@ export class DataComponent implements OnInit{
 
       // Concurrently await all promises
       const [dataWS, data] = await Promise.all([dataWSPromise, dataPromise]);
-
-      console.log(data);
       // Process the data and perform other actions
       this.processChartData(data);
       if (dataWS) {
-        console.log(dataWS);
         this.processChartDataWS(dataWS);
       }
       this.fetchDeviceInfo(this.deviceID);
