@@ -3,6 +3,10 @@
 	padding-bottom: 5vh;
 }
 
+button{
+	z-index: 0;
+}
+
 .button-group{
     width: 100%;
     background-color: #3f51b5;

@@ -18,6 +18,7 @@ export interface DataTable {
   TemperatureB?: string;
   flowRate?: string;
   location?: string;
+  totalVolume?: string;
   createdAt?: string;
 }
 
@@ -40,7 +41,7 @@ export class AppMqttComponent implements OnInit {
 
   displayedColumns: string[] = [];
   dataSource = new MatTableDataSource<DataTable>();
-  
+
 
   ngOnInit() {
     this.getUserDevices();
@@ -77,7 +78,7 @@ export class AppMqttComponent implements OnInit {
         break;
       case 'ws':
       case 'fs':
-        this.displayedColumns = ['DeviceName', 'DeviceUID', 'Date', 'flowRate'];
+        this.displayedColumns = ['DeviceName', 'DeviceUID', 'Date', 'flowRate', 'totalVolume'];
         break;
       default:
         this.displayedColumns = ['DeviceName', 'DeviceUID', 'Date']; // Default columns
@@ -140,7 +141,6 @@ export class AppMqttComponent implements OnInit {
   async fetchData() {
     try {
       if (!this.device_uid.valid || !this.start_date.valid || !this.end_date.valid) {
-        console.error('Validation failed.');
         this.device_uid.markAsTouched();
         this.start_date.markAsTouched();
         this.end_date.markAsTouched();
@@ -176,15 +176,13 @@ export class AppMqttComponent implements OnInit {
       } else if(this.selectedDeviceType === 'ryb'){
         this.processChartDataRYB(data);
       } else if(this.selectedDeviceType === 'ws' || this.selectedDeviceType === 'fs'){
-        this.processChartDataWSFS(data);
+        // this.processChartDataWSFS(data);
+        // this.processChartDataWSFSTotal(dataWS);
+        this.mergeChartData(data, dataWS);
       } else{
         this.snackBar.open('Device Type is not Found!', 'Dismiss', {
           duration: 2000
         });
-      }
-
-      if (dataWS) {
-        console.log('WS Data:', dataWS);
       }
     } catch (error) {
       console.error('Error while fetching data:', error);
@@ -303,40 +301,168 @@ export class AppMqttComponent implements OnInit {
     console.log(this.dataSource);
   }
 
-  processChartDataWSFS(response: any) {
-    const data = response.data;
-    const istOffset = 5.5 * 60 * 60 * 1000;
+  // processChartDataWSFS(response: any) {
+  //   const data = response.data;
+  //   const istOffset = 5.5 * 60 * 60 * 1000;
 
-    const processedData = data.map((entry: any) => {
-      const DeviceUID = entry.DeviceUID;
-      const deviceOption = this.deviceOptions.find(device => device.DeviceUID === DeviceUID);
+  //   const processedData = data.map((entry: any) => {
+  //     const DeviceUID = entry.DeviceUID;
+  //     const deviceOption = this.deviceOptions.find(device => device.DeviceUID === DeviceUID);
 
-      const timestamp = new Date(entry.bucket_start_time).getTime() + istOffset;
-      const flowRate = entry.flowRate ? parseFloat(entry.flowRate).toFixed(1) : 'Offline';
+  //     const timestamp = new Date(entry.bucket_start_time).getTime() + istOffset;
+  //     const flowRate = entry.flowRate ? parseFloat(entry.flowRate).toFixed(1) : 'Offline';
 
-      // Format the date as 'Jan 21, 2024, 5:30:00 AM'
-      const formattedDate = new Date(timestamp).toLocaleString('en-US', {
-        month: 'short',
-        day: 'numeric',
-        year: 'numeric',
-        hour: 'numeric',
-        minute: 'numeric',
-        second: 'numeric',
-        hour12: true,
-      });
+  //     // Format the date as 'Jan 21, 2024, 5:30:00 AM'
+  //     const formattedDate = new Date(timestamp).toLocaleString('en-US', {
+  //       month: 'short',
+  //       day: 'numeric',
+  //       year: 'numeric',
+  //       hour: 'numeric',
+  //       minute: 'numeric',
+  //       second: 'numeric',
+  //       hour12: true,
+  //     });
 
-      return {
-        DeviceName: deviceOption ? deviceOption.DeviceName : '',
-        DeviceUID : DeviceUID,
-        Date: formattedDate,
-        flowRate: flowRate
-      };
+  //     return {
+  //       DeviceName: deviceOption ? deviceOption.DeviceName : '',
+  //       DeviceUID : DeviceUID,
+  //       Date: formattedDate,
+  //       flowRate: flowRate
+  //     };
+  //   });
+
+  //   this.dataSource.data = processedData;
+  //   this.dataSource.paginator = this.paginator;
+  //   console.log(this.dataSource);
+  // }
+
+  // processChartDataWSFSTotal(response: any) {
+  //   const data = response.data;
+  //   const istOffset = 5.5 * 60 * 60 * 1000;
+
+  //   const processedData = data.map((entry: any) => {
+  //     const DeviceUID = entry.DeviceUID;
+  //     const deviceOption = this.deviceOptions.find(device => device.DeviceUID === DeviceUID);
+
+  //     const timestamp = new Date(entry.TimeStamp);
+  //     const totalVolume = entry.totalVolume ? parseFloat(entry.totalVolume).toFixed(1) : 'Offline';
+
+  //     // Format the date as 'Jan 21, 2024, 5:30:00 AM'
+  //     const formattedDate = new Date(timestamp).toLocaleString('en-US', {
+  //       month: 'short',
+  //       day: 'numeric',
+  //       year: 'numeric',
+  //       hour: 'numeric',
+  //       minute: 'numeric',
+  //       second: 'numeric',
+  //       hour12: true,
+  //     });
+
+  //     return {
+  //       DeviceName: deviceOption ? deviceOption.DeviceName : '',
+  //       DeviceUID : DeviceUID,
+  //       Date: formattedDate,
+  //       totalVolume: totalVolume
+  //     };
+  //   });
+
+  //   this.dataSource.data = processedData;
+  //   this.dataSource.paginator = this.paginator;
+  //   console.log(this.dataSource);
+  // }
+mergeChartData(responseWSFS: any, responseWSFSTotal: any) {
+  const processedDataWSFS = this.processChartDataWSFS(responseWSFS);
+  const processedDataWSFSTotal = this.processChartDataWSFSTotal(responseWSFSTotal);
+
+  // Create an object to store aggregated totalVolume for each date
+  const totalVolumeMap: { [date: string]: number } = {};
+
+  // Aggregate totalVolume values for each date from processedDataWSFSTotal
+  processedDataWSFSTotal.forEach((wsfstotalEntry: any) => {
+    const key = wsfstotalEntry.Date;
+    totalVolumeMap[key] = (totalVolumeMap[key] || 0) + parseFloat(wsfstotalEntry.totalVolume);
+  });
+
+  // Merge the data from processedDataWSFS and add aggregated totalVolume
+  const mergedData = processedDataWSFS.map((wsfsEntry: any) => {
+    const key = wsfsEntry.Date;
+    const aggregatedTotalVolume = totalVolumeMap[key];
+    
+    return {
+      ...wsfsEntry,
+      totalVolume: aggregatedTotalVolume || 'N/A'
+    };
+  });
+
+  this.dataSource.data = mergedData;
+  this.dataSource.paginator = this.paginator;
+  console.log(this.dataSource);
+}
+
+
+processChartDataWSFS(response: any) {
+  const data = response.data;
+  const istOffset = 5.5 * 60 * 60 * 1000;
+
+  return data.map((entry: any) => {
+    const DeviceUID = entry.DeviceUID;
+    const deviceOption = this.deviceOptions.find(device => device.DeviceUID === DeviceUID);
+
+    const timestamp = new Date(entry.bucket_start_time).getTime() + istOffset;
+    const flowRate = entry.flowRate ? parseFloat(entry.flowRate).toFixed(1) : 'Offline';
+
+    // Format the date as 'Jan 21, 2024, 5:30:00 AM'
+    const formattedDate = new Date(timestamp).toLocaleString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric',
+      hour: 'numeric',
+      minute: 'numeric',
+      second: 'numeric',
+      hour12: true,
     });
 
-    this.dataSource.data = processedData;
-    this.dataSource.paginator = this.paginator;
-    console.log(this.dataSource);
-  }
+    return {
+      DeviceName: deviceOption ? deviceOption.DeviceName : '',
+      DeviceUID: DeviceUID,
+      Date: formattedDate,
+      flowRate: flowRate
+    };
+  });
+}
+
+processChartDataWSFSTotal(response: any) {
+  const data = response.data;
+  const istOffset = 5.5 * 60 * 60 * 1000;
+
+  return data.map((entry: any) => {
+    const DeviceUID = entry.DeviceUID;
+    const deviceOption = this.deviceOptions.find(device => device.DeviceUID === DeviceUID);
+
+    const timestamp = new Date(entry.TimeStamp);
+    const totalVolume = entry.totalVolume ? parseFloat(entry.totalVolume).toFixed(1) : 'Offline';
+
+    // Format the date as 'Jan 21, 2024, 5:30:00 AM'
+    const formattedDate = new Date(timestamp).toLocaleString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric',
+      hour: 'numeric',
+      minute: 'numeric',
+      second: 'numeric',
+      hour12: true,
+    });
+
+    return {
+      DeviceName: deviceOption ? deviceOption.DeviceName : '',
+      DeviceUID: DeviceUID,
+      Date: formattedDate,
+      totalVolume: totalVolume
+    };
+  });
+}
+
+
 
   downloadCSV() {
     const startDateFormatted = this.datePipe.transform(this.start_date.value, 'yyyyMMdd');
