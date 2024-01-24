@@ -129,6 +129,8 @@ export class TempComponent implements OnInit {
 
         const transformedEntry: any = {
           DeviceUID: deviceUID,
+          Temperature: entryData.Temperature ? parseFloat(entryData.Temperature) : undefined,
+          Humidity: entryData.Humidity ? parseFloat(entryData.Humidity) : undefined,
           TemperatureR: entryData.TemperatureR ? parseFloat(entryData.TemperatureR) : undefined,
           TemperatureY: entryData.TemperatureY ? parseFloat(entryData.TemperatureY) : undefined,
           TemperatureB: entryData.TemperatureB ? parseFloat(entryData.TemperatureB) : undefined,
