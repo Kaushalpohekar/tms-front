@@ -13,6 +13,7 @@ import { TriggerDeviceComponent } from './dash-component/trigger-device/trigger-
 import { NotificationComponent } from './dash-pages/notification/notification.component';
 import { UserManageComponent } from './dash-pages/user-manage/user-manage.component';
 import { SidebarComponent } from './dash-component/sidebar/sidebar.component';
+import { AppMqttComponent } from './dash-pages/app-mqtt/app-mqtt.component';
 
 import {MatIconModule} from '@angular/material/icon';
 import {MatToolbarModule} from '@angular/material/toolbar';
@@ -36,8 +37,9 @@ import {MatExpansionModule} from '@angular/material/expansion';
 import {MatTableDataSource, MatTableModule} from '@angular/material/table';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {MatTooltipModule} from '@angular/material/tooltip';
-
+import {MatButtonToggleModule} from '@angular/material/button-toggle';
 import {MatChipsModule} from '@angular/material/chips';
+import { MatPaginatorModule } from '@angular/material/paginator';
 
 
 import { MatSnackBarModule } from '@angular/material/snack-bar';
@@ -66,6 +68,7 @@ import { PageLoadingComponent } from './dash-loading/page-loading/page-loading.c
     AddUserComponent,
     AddDeviceComponent,
     PageLoadingComponent,
+    AppMqttComponent
   ],
   imports: [
     CommonModule,
@@ -95,7 +98,9 @@ import { PageLoadingComponent } from './dash-loading/page-loading/page-loading.c
     MatChipsModule,
     MatSnackBarModule,
     MatProgressSpinnerModule,
-    MatTooltipModule
+    MatTooltipModule,
+    MatButtonToggleModule,
+    MatPaginatorModule
   ],
   providers:[
     AuthService,

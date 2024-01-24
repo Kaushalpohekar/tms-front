@@ -62,19 +62,24 @@
         </div>
       </mat-radio-group>
     </div>
-    <div class="col-md-6 justify-content-end d-flex mb-2">
-      <button mat-raised-button (click)="onNoClick()">Close</button>
+    <div class="col-12 justify-content-center d-flex mb-2">
+      <div class="row">
+        <div class="col">
+          <button mat-raised-button (click)="onNoClick()">Close</button>
+        </div>
+        <div class="col">
+          <button mat-raised-button color="primary" (click)="onSaveClick()">Filter</button>
+        </div>
+      </div>
     </div>
-    <div class="col-md-6 mb-2">
-      <button mat-raised-button color="primary" (click)="onSaveClick()">Filter</button>
-    </div>
-    <div class="col-md-12 mb-2">
+
+<!--     <div class="col-md-12 mb-2">
       <div class="text-center">
         <button mat-stroked-button color="primary" class="download-button" style="width: 60%" (click)="downloadPDF()">
           <mat-icon>file_download</mat-icon>
           Download Report
         </button>
       </div>
-    </div>
+    </div> -->
   </div>
 </div>

@@ -1,66 +1,385 @@
-// Import necessary modules
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import * as mqtt from 'mqtt';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { FormControl, Validators } from '@angular/forms';
+import { DashDataService } from '../../dash-data-service/dash-data.service';
+import { AuthService } from '../../../login/auth/auth.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { DatePipe } from '@angular/common';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatTableDataSource } from '@angular/material/table';
+
+export interface DataTable {
+  DeviceName?: string;
+  DeviceUID?: string;
+  Date?: string;
+  Temperature?: string;
+  Humidity?: string;
+  TemperatureR?: string;
+  TemperatureY?: string;
+  TemperatureB?: string;
+  flowRate?: string;
+  location?: string;
+  createdAt?: string;
+}
 
 @Component({
   selector: 'app-app-mqtt',
   templateUrl: './app-mqtt.component.html',
   styleUrls: ['./app-mqtt.component.css']
 })
-export class AppMqttComponent implements OnInit, OnDestroy {
+export class AppMqttComponent implements OnInit {
 
-  private mqttBrokerUrl = 'mqtt://13.232.24.140:1883'; // Replace with your MQTT broker address and port
-  private mqttClient!: mqtt.Client;
-  private mqttTopic = 'example/topic'; // Replace with the topic you want to subscribe/publish
+  constructor(private DashDataService: DashDataService,private authService: AuthService, public snackBar: MatSnackBar, private datePipe: DatePipe) { }
 
-  constructor() { }
+  CompanyEmail!: string | null;
+  deviceOptions: any[] = [];
+  selectedDeviceUID!: any;
+  selectedDeviceType!: any;
+  device_uid = new FormControl('', [Validators.required]);
+  start_date = new FormControl('', [Validators.required, this.dateShouldNotBeAfterToday.bind(this)]);
+  end_date = new FormControl('', [Validators.required, this.endDateShouldNotBeAfterToday.bind(this), this.endDateShouldBeAfterStartDate.bind(this)]);
 
-  ngOnInit(): void {
-    this.connectToBroker();
+  displayedColumns: string[] = [];
+  dataSource = new MatTableDataSource<DataTable>();
+  
+
+  ngOnInit() {
+    this.getUserDevices();
   }
-
-  ngOnDestroy(): void {
-    this.disconnectFromBroker();
-  }
-
-  private connectToBroker(): void {
-    this.mqttClient = mqtt.connect(this.mqttBrokerUrl);
-
-    this.mqttClient.on('connect', () => {
-      console.log('Connected to MQTT broker');
-      this.subscribeToTopic();
-      // You can perform additional actions after a successful connection here
-    });
-
-    this.mqttClient.on('error', (error) => {
-      console.error('Error connecting to MQTT broker:', error);
-    });
-
-    this.mqttClient.on('message', (topic, message) => {
-      console.log('Received message on topic', topic, ':', message.toString());
-      // Process the incoming message
-    });
-  }
-
-  private subscribeToTopic(): void {
-    this.mqttClient.subscribe(this.mqttTopic, (err) => {
-      if (!err) {
-        console.log('Subscribed to', this.mqttTopic);
-      }
-    });
-  }
-
-  public publishMessage(): void {
-    const message = 'Hello, MQTT!';
-    this.mqttClient.publish(this.mqttTopic, message);
-    console.log('Published message:', message);
-  }
-
-  private disconnectFromBroker(): void {
-    if (this.mqttClient) {
-      // Disconnect from the MQTT broker
-      this.mqttClient.end();
-      console.log('Disconnected from MQTT broker');
+  getUserDevices() {
+    this.CompanyEmail = this.authService.getCompanyEmail();
+    if (this.CompanyEmail) {
+      this.DashDataService.userDevices(this.CompanyEmail).subscribe(
+        (devices: any) => {
+          this.deviceOptions = devices.devices;
+        },
+        (error) => {
+          this.snackBar.open('Error while fetching user devices!', 'Dismiss', {
+            duration: 2000
+          });
+        }
+      );
     }
   }
+
+  @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
+
+  setDisplayedColumns() {
+    // Set displayed columns based on the selectedDeviceType
+    switch (this.selectedDeviceType) {
+      case 't':
+        this.displayedColumns = ['DeviceName', 'DeviceUID', 'Date', 'Temperature'];
+        break;
+      case 'th':
+        this.displayedColumns = ['DeviceName', 'DeviceUID', 'Date', 'Temperature', 'Humidity'];
+        break;
+      case 'ryb':
+        this.displayedColumns = ['DeviceName', 'DeviceUID', 'Date', 'TemperatureR', 'TemperatureY', 'TemperatureB'];
+        break;
+      case 'ws':
+      case 'fs':
+        this.displayedColumns = ['DeviceName', 'DeviceUID', 'Date', 'flowRate'];
+        break;
+      default:
+        this.displayedColumns = ['DeviceName', 'DeviceUID', 'Date']; // Default columns
+    }
+  }
+
+  // Custom validation function for start_date
+  private dateShouldNotBeAfterToday(control: FormControl) {
+    const selectedDate = new Date(control.value);
+    const today = new Date();
+    return selectedDate <= today ? null : { dateShouldNotBeAfterToday: true };
+  }
+
+  // Custom validation function for end_date
+  private endDateShouldNotBeAfterToday(control: FormControl) {
+    const endDate = new Date(control.value);
+    const today = new Date();
+    return endDate <= today ? null : { endDateShouldNotBeAfterToday: true };
+  }
+
+  // Custom validation function for end_date
+  private endDateShouldBeAfterStartDate(control: FormControl) {
+    const startDateValue = this.start_date.value ?? ''; // Use nullish coalescing operator
+    const startDate = new Date(startDateValue);
+    const endDate = new Date(control.value);
+    return endDate >= startDate ? null : { endDateShouldBeAfterStartDate: true };
+  }
+
+  // Getter methods for easy access to form control values
+  getDeviceUidErrorMessage() {
+    return this.device_uid.hasError('required') ? 'Device Name is <strong>required</strong>' : '';
+  }
+
+  getStartDateErrorMessage() {
+    if (this.start_date.hasError('required')) {
+      return 'Start date is <strong>required</strong>';
+    } else if (this.start_date.hasError('dateShouldNotBeAfterToday')) {
+      return 'Start date should not be after today';
+    }
+    return '';
+  }
+
+  getEndDateErrorMessage() {
+    if (this.end_date.hasError('required')) {
+      return 'End date is <strong>required</strong>';
+    } else if (this.end_date.hasError('endDateShouldNotBeAfterToday')) {
+      return 'End date should not be after today';
+    } else if (this.end_date.hasError('endDateShouldBeAfterStartDate')) {
+      return 'End date should be after start date';
+    }
+    return '';
+  }
+
+  // Function to get the max date for the end date input
+  getMaxEndDate() {
+    const today = new Date();
+    return today.toISOString().split('T')[0];
+  }
+
+  async fetchData() {
+    try {
+      if (!this.device_uid.valid || !this.start_date.valid || !this.end_date.valid) {
+        console.error('Validation failed.');
+        this.device_uid.markAsTouched();
+        this.start_date.markAsTouched();
+        this.end_date.markAsTouched();
+        this.snackBar.open('Validation failed!', 'Dismiss', { duration: 2000 });
+        return; // Return early if validation fails
+      }
+
+      // Format dates using datePipe
+      const startDateFormatted = this.datePipe.transform(this.start_date.value, 'yyyy-MM-dd');
+      const endDateFormatted = this.datePipe.transform(this.end_date.value, 'yyyy-MM-dd');
+
+      this.selectedDeviceUID = (this.device_uid.value as { DeviceUID?: string })?.DeviceUID;
+      this.selectedDeviceType = (this.device_uid.value as { DeviceType?: string })?.DeviceType;
+
+      let dataWSPromise, dataPromise;
+
+      if (this.selectedDeviceType === 'ws' || this.selectedDeviceType === 'fs') {
+        dataWSPromise = this.DashDataService.getCustomConsumption(this.selectedDeviceUID, startDateFormatted, endDateFormatted).toPromise();
+      }
+
+      dataPromise = this.DashDataService.DataByCustomDate(this.selectedDeviceUID, startDateFormatted, endDateFormatted).toPromise();
+
+      // Concurrently await all promises
+      const [dataWS, data] = await Promise.all([dataWSPromise, dataPromise]);
+
+      this.setDisplayedColumns();
+
+      // Process the data and perform other actions
+      if(this.selectedDeviceType === 't'){
+        this.processChartDataT(data);
+      } else if(this.selectedDeviceType === 'th'){
+        this.processChartDataTH(data);
+      } else if(this.selectedDeviceType === 'ryb'){
+        this.processChartDataRYB(data);
+      } else if(this.selectedDeviceType === 'ws' || this.selectedDeviceType === 'fs'){
+        this.processChartDataWSFS(data);
+      } else{
+        this.snackBar.open('Device Type is not Found!', 'Dismiss', {
+          duration: 2000
+        });
+      }
+
+      if (dataWS) {
+        console.log('WS Data:', dataWS);
+      }
+    } catch (error) {
+      console.error('Error while fetching data:', error);
+      this.snackBar.open('Error while fetching data!', 'Dismiss', { duration: 2000 });
+    }
+  }
+
+  processChartDataTH(response: any) {
+    const data = response.data;
+    const istOffset = 5.5 * 60 * 60 * 1000;
+
+    const processedData = data.map((entry: any) => {
+      const DeviceUID = entry.DeviceUID;
+      const deviceOption = this.deviceOptions.find(device => device.DeviceUID === DeviceUID);
+
+      const timestamp = new Date(entry.bucket_start_time).getTime() + istOffset;
+      const Temperature = entry.Temperature ? parseFloat(entry.Temperature).toFixed(1) : 'Offline';
+      const Humidity = entry.Humidity ? parseFloat(entry.Humidity).toFixed(1) : 'Offline';
+
+      // Format the date as 'Jan 21, 2024, 5:30:00 AM'
+      const formattedDate = new Date(timestamp).toLocaleString('en-US', {
+        month: 'short',
+        day: 'numeric',
+        year: 'numeric',
+        hour: 'numeric',
+        minute: 'numeric',
+        second: 'numeric',
+        hour12: true,
+      });
+
+      return {
+        DeviceName: deviceOption ? deviceOption.DeviceName : '',
+        DeviceUID : DeviceUID,
+        Date: formattedDate,
+        Temperature: Temperature,
+        Humidity: Humidity,
+      };
+    });
+
+    this.dataSource.data = processedData;
+    this.dataSource.paginator = this.paginator;
+    console.log(this.dataSource);
+  }
+
+  processChartDataT(response: any) {
+    const data = response.data;
+    const istOffset = 5.5 * 60 * 60 * 1000;
+
+    const processedData = data.map((entry: any) => {
+      const DeviceUID = entry.DeviceUID;
+      const deviceOption = this.deviceOptions.find(device => device.DeviceUID === DeviceUID);
+
+      const timestamp = new Date(entry.bucket_start_time).getTime() + istOffset;
+      const Temperature = entry.Temperature ? parseFloat(entry.Temperature).toFixed(1) : 'Offline';
+
+      // Format the date as 'Jan 21, 2024, 5:30:00 AM'
+      const formattedDate = new Date(timestamp).toLocaleString('en-US', {
+        month: 'short',
+        day: 'numeric',
+        year: 'numeric',
+        hour: 'numeric',
+        minute: 'numeric',
+        second: 'numeric',
+        hour12: true,
+      });
+
+      return {
+        DeviceName: deviceOption ? deviceOption.DeviceName : '',
+        DeviceUID : DeviceUID,
+        Date: formattedDate,
+        Temperature: Temperature,
+      };
+    });
+
+    this.dataSource.data = processedData;
+    this.dataSource.paginator = this.paginator;
+    console.log(this.dataSource);
+  }
+
+  processChartDataRYB(response: any) {
+    const data = response.data;
+    const istOffset = 5.5 * 60 * 60 * 1000;
+
+    const processedData = data.map((entry: any) => {
+      const DeviceUID = entry.DeviceUID;
+      const deviceOption = this.deviceOptions.find(device => device.DeviceUID === DeviceUID);
+
+      const timestamp = new Date(entry.bucket_start_time).getTime() + istOffset;
+      const TemperatureR = entry.TemperatureR ? parseFloat(entry.TemperatureR).toFixed(1) : 'Offline';
+      const TemperatureY = entry.TemperatureY ? parseFloat(entry.TemperatureY).toFixed(1) : 'Offline';
+      const TemperatureB = entry.TemperatureB ? parseFloat(entry.TemperatureB).toFixed(1) : 'Offline';
+
+      // Format the date as 'Jan 21, 2024, 5:30:00 AM'
+      const formattedDate = new Date(timestamp).toLocaleString('en-US', {
+        month: 'short',
+        day: 'numeric',
+        year: 'numeric',
+        hour: 'numeric',
+        minute: 'numeric',
+        second: 'numeric',
+        hour12: true,
+      });
+
+      return {
+        DeviceName: deviceOption ? deviceOption.DeviceName : '',
+        DeviceUID : DeviceUID,
+        Date: formattedDate,
+        TemperatureR: TemperatureR,
+        TemperatureY: TemperatureY,
+        TemperatureB: TemperatureB
+      };
+    });
+
+    this.dataSource.data = processedData;
+    this.dataSource.paginator = this.paginator;
+    console.log(this.dataSource);
+  }
+
+  processChartDataWSFS(response: any) {
+    const data = response.data;
+    const istOffset = 5.5 * 60 * 60 * 1000;
+
+    const processedData = data.map((entry: any) => {
+      const DeviceUID = entry.DeviceUID;
+      const deviceOption = this.deviceOptions.find(device => device.DeviceUID === DeviceUID);
+
+      const timestamp = new Date(entry.bucket_start_time).getTime() + istOffset;
+      const flowRate = entry.flowRate ? parseFloat(entry.flowRate).toFixed(1) : 'Offline';
+
+      // Format the date as 'Jan 21, 2024, 5:30:00 AM'
+      const formattedDate = new Date(timestamp).toLocaleString('en-US', {
+        month: 'short',
+        day: 'numeric',
+        year: 'numeric',
+        hour: 'numeric',
+        minute: 'numeric',
+        second: 'numeric',
+        hour12: true,
+      });
+
+      return {
+        DeviceName: deviceOption ? deviceOption.DeviceName : '',
+        DeviceUID : DeviceUID,
+        Date: formattedDate,
+        flowRate: flowRate
+      };
+    });
+
+    this.dataSource.data = processedData;
+    this.dataSource.paginator = this.paginator;
+    console.log(this.dataSource);
+  }
+
+  downloadCSV() {
+    const startDateFormatted = this.datePipe.transform(this.start_date.value, 'yyyyMMdd');
+    const endDateFormatted = this.datePipe.transform(this.end_date.value, 'yyyyMMdd');
+    const fileName = `${this.selectedDeviceUID}_${startDateFormatted}_${endDateFormatted}.csv`;
+
+    const csvData = this.convertDataSourceToCSV(this.dataSource.data);
+
+    if (!csvData || csvData.trim() === '') {
+      this.snackBar.open('No data found.', 'Dismiss', {
+        duration: 2000
+      });
+      return;
+    }
+
+    const blob = new Blob([csvData], { type: 'text/csv' });
+    const link = document.createElement('a');
+    link.href = window.URL.createObjectURL(blob);
+    link.download = fileName;
+    link.click();
+  }
+
+  // Convert data to CSV format
+  private convertDataSourceToCSV(data: DataTable[]): string {
+    if (!data || data.length === 0) {
+      return '';
+    }
+
+    const header = Object.keys(data[0]).join(',') + '\n';
+    const csvRows = data.map(row => Object.values(row).join(',') + '\n');
+    return header + csvRows.join('');
+  }
+
+  downloadXLXS() {
+    this.snackBar.open('XLSX sheed will be Available in Next Update!', 'Dismiss', {
+      duration: 2000
+    });
+  }
+
+  downloadPDF() {
+    this.snackBar.open('PDF sheed will be Available in Next Update!', 'Dismiss', {
+      duration: 2000
+    });
+  }
+
 }

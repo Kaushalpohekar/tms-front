@@ -6,6 +6,7 @@ import { DataComponent } from './dash-pages/data/data.component';
 import { ProfileComponent } from './dash-pages/profile/profile.component';
 import { NotificationComponent } from './dash-pages/notification/notification.component';
 import { UserManageComponent } from './dash-pages/user-manage/user-manage.component';
+import { AppMqttComponent } from './dash-pages/app-mqtt/app-mqtt.component';
 
 
 import { AuthGuard } from '../login/auth/auth.guard';
@@ -16,6 +17,7 @@ const routes: Routes = [
   { path: 'profile', component:ProfileComponent},
   { path: 'notification', component:NotificationComponent},
   { path: 'users', component:UserManageComponent},
+  { path: 'report', component:AppMqttComponent},
   { path: '', redirectTo: 'temp', pathMatch: 'full' }
 ];
 

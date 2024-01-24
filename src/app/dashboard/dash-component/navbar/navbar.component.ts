@@ -53,4 +53,8 @@ export class NavbarComponent {
   profile(){
     this.router.navigate(['/dash/profile']);
   }
+
+  report(){
+    this.router.navigate(['/dash/report']);
+  }
 }

@@ -1,1 +1,92 @@
-<p>app-mqtt works!</p>
+<div class="content">
+    <div class="container-fluid">
+    	<div class="row pt-3 mb-3">
+    		<div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
+    			<mat-card>
+        			<mat-card-content>
+		        		<div class="container-fluid">
+					    	<div class="row">
+					    		<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-4">
+					    			<div>Download Report</div>
+					        		<mat-button-toggle-group name="fontStyle" class="button-group" aria-label="Font Style">
+										<mat-button-toggle class="button-group" value="csv" (click)="downloadCSV()">CSV</mat-button-toggle>
+										<mat-button-toggle class="button-group" value="xlxs" (click)="downloadXLXS()">Excel</mat-button-toggle>
+										<mat-button-toggle class="button-group" value="pdf" (click)="downloadPDF()">Print</mat-button-toggle>
+									</mat-button-toggle-group>
+					        	</div>
+
+					        	<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-1">
+					        		<div>Apply Filter</div>
+					        	</div>
+					    		<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-1">
+					                <mat-form-field appearance="outline" class="form-field">
+					                    <mat-label>Select Device</mat-label>
+										<mat-select [formControl]="device_uid" required>
+											<mat-option *ngFor="let device of deviceOptions" [value]="device">
+											{{ device.DeviceName }}
+											</mat-option>
+										</mat-select>
+										<mat-error [innerHTML]="getDeviceUidErrorMessage()"></mat-error>
+					                </mat-form-field>
+					            </div>
+					            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-1">
+					                <mat-form-field class="form-field" appearance="outline">
+										<mat-label>Start Date</mat-label>
+										<input matInput [formControl]="start_date" [matDatepicker]="startPicker" placeholder="Start Date" [max]="getMaxEndDate()">
+										<mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>
+										<mat-datepicker #startPicker></mat-datepicker>
+										<mat-error [innerHTML]="getStartDateErrorMessage()"></mat-error>
+									  </mat-form-field>
+					            </div>
+					            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-1">
+					                <mat-form-field class="form-field" appearance="outline">
+										<mat-label>End Date</mat-label>
+										<input matInput [formControl]="end_date" [matDatepicker]="endPicker" placeholder="End Date" [min]="start_date.value" [max]="getMaxEndDate()">
+										<mat-datepicker-toggle matSuffix [for]="endPicker"></mat-datepicker-toggle>
+										<mat-datepicker #endPicker></mat-datepicker>
+										<mat-error [innerHTML]="getEndDateErrorMessage()"></mat-error>
+									  </mat-form-field>
+					            </div>
+					            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-1">
+					                <div class="d-flex justify-content-end">
+					                	<button mat-raised-button style="width: 100%;" color="primary" (click)="fetchData()">Filter</button>
+					                </div>
+					            </div>
+					    	</div>
+					    </div>
+        			</mat-card-content>
+        		</mat-card>
+    		</div>
+    		<div class="col-xl-8 col-lg-8 col-md-12 col-sm-12 mb-2">
+    			<mat-card class="dataTable">
+    				<mat-card-content>
+    					<div class="table-container" style="overflow: auto; max-height:100%;">
+    						<ng-container *ngIf="dataSource.data.length > 0; else noData">
+								<table mat-table [dataSource]="dataSource" class="">
+
+								  <ng-container *ngFor="let column of displayedColumns">
+								    <ng-container matColumnDef="{{ column }}">
+								      <th mat-header-cell *matHeaderCellDef>{{ column }}</th>
+								      <td mat-cell *matCellDef="let element">{{ element[column] }}</td>
+								    </ng-container>
+								  </ng-container>
+								  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+								  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+								</table>
+							</ng-container>
+							<ng-template #noData>
+								<div class="msg">
+									<h4>No data found for this time interval.</h4>
+								</div>
+							</ng-template>
+						</div>
+						<div [hidden]="dataSource.data.length === 0">
+						    <!-- Your data table code here -->
+						    <mat-paginator [pageSize]="10" showFirstLastButtons></mat-paginator>
+						</div>
+    				</mat-card-content>
+    			</mat-card>
+    		</div>
+    	</div>
+    </div>
+</div>

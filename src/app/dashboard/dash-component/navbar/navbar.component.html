@@ -9,9 +9,9 @@
  <mat-toolbar class="navbar">
   <div class="left-side">
     <a routerLink="/dash/users">
-      <img src="../../../assets/img/favicon.ico" alt="Logo" class="logo"/>
+      <img src="../../../assets/img/senso.png" alt="Logo" class="logo"/>
     </a>
-    <span class="logo-text">SenseLive - TMS</span>
+    <!-- <span class="logo-text">SenseLive - TMS</span> -->
   </div>
 
   <div class="menu-icon" (click)="dashService.toggleMenu()">
@@ -27,6 +27,10 @@
 
     <button mat-mini-fab color="basic" aria-label="data_usage" (click)="data()">
       <mat-icon>analytics</mat-icon>
+    </button>
+
+    <button mat-mini-fab color="basic" aria-label="report" (click)="report()">
+      <mat-icon>download</mat-icon>
     </button>
 
     <!-- <button mat-mini-fab color="basic" aria-label="notifications" (click)="notifications()">
