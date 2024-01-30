@@ -196,8 +196,7 @@ export class TempComponent implements OnInit {
           const triggerValue = trigger.TriggerValue;
 
           // Check the temperature and compare with the trigger value
-          //if (typeof temperature === 'number' && temperature >triggerValue) {
-          if (typeof temperature === 'object' && temperature >triggerValue) {
+          if (typeof temperature === 'number' && temperature > triggerValue) {
             return true; // Device is heated
           } else if (typeof temperature === 'object') {
             // Check individual temperature parameters
