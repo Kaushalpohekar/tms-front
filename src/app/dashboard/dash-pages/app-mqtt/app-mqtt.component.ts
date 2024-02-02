@@ -203,15 +203,25 @@ export class AppMqttComponent implements OnInit {
       const Humidity = entry.Humidity ? parseFloat(entry.Humidity).toFixed(1) : 'Offline';
 
       // Format the date as 'Jan 21, 2024, 5:30:00 AM'
-      const formattedDate = new Date(timestamp).toLocaleString('en-US', {
-        month: 'short',
-        day: 'numeric',
-        year: 'numeric',
-        hour: 'numeric',
-        minute: 'numeric',
-        second: 'numeric',
-        hour12: true,
-      });
+      // const formattedDate = new Date(timestamp).toLocaleString('en-US', {
+      //   month: 'short',
+      //   day: 'numeric',
+      //   year: 'numeric',
+      //   hour: 'numeric',
+      //   minute: 'numeric',
+      //   second: 'numeric',
+      //   hour12: true,
+      // });
+      // const formattedDate = new Date(timestamp).toLocaleString('en-US', {
+      //     year: 'numeric',
+      //     month: '2-digit',
+      //     day: '2-digit',
+      //     hour: '2-digit',
+      //     minute: '2-digit',
+      //     second: '2-digit',
+      //     hour12: true,
+      // });
+      const formattedDate = new Date(timestamp).toISOString().replace(/T/, ' ').replace(/\..+/, '');
 
       return {
         DeviceName: deviceOption ? deviceOption.DeviceName : '',
@@ -239,15 +249,16 @@ export class AppMqttComponent implements OnInit {
       const Temperature = entry.Temperature ? parseFloat(entry.Temperature).toFixed(1) : 'Offline';
 
       // Format the date as 'Jan 21, 2024, 5:30:00 AM'
-      const formattedDate = new Date(timestamp).toLocaleString('en-US', {
-        month: 'short',
-        day: 'numeric',
-        year: 'numeric',
-        hour: 'numeric',
-        minute: 'numeric',
-        second: 'numeric',
-        hour12: true,
-      });
+      // const formattedDate = new Date(timestamp).toLocaleString('en-US', {
+      //     year: 'numeric',
+      //     month: '2-digit',
+      //     day: '2-digit',
+      //     hour: '2-digit',
+      //     minute: '2-digit',
+      //     second: '2-digit',
+      //     hour12: true,
+      // });
+      const formattedDate = new Date(timestamp).toISOString().replace(/T/, ' ').replace(/\..+/, '');
 
       return {
         DeviceName: deviceOption ? deviceOption.DeviceName : '',
@@ -276,15 +287,16 @@ export class AppMqttComponent implements OnInit {
       const TemperatureB = entry.TemperatureB ? parseFloat(entry.TemperatureB).toFixed(1) : 'Offline';
 
       // Format the date as 'Jan 21, 2024, 5:30:00 AM'
-      const formattedDate = new Date(timestamp).toLocaleString('en-US', {
-        month: 'short',
-        day: 'numeric',
-        year: 'numeric',
-        hour: 'numeric',
-        minute: 'numeric',
-        second: 'numeric',
-        hour12: true,
-      });
+      // const formattedDate = new Date(timestamp).toLocaleString('en-US', {
+      //     year: 'numeric',
+      //     month: '2-digit',
+      //     day: '2-digit',
+      //     hour: '2-digit',
+      //     minute: '2-digit',
+      //     second: '2-digit',
+      //     hour12: true,
+      // });
+      const formattedDate = new Date(timestamp).toISOString().replace(/T/, ' ').replace(/\..+/, '');
 
       return {
         DeviceName: deviceOption ? deviceOption.DeviceName : '',
@@ -301,75 +313,6 @@ export class AppMqttComponent implements OnInit {
     console.log(this.dataSource);
   }
 
-  // processChartDataWSFS(response: any) {
-  //   const data = response.data;
-  //   const istOffset = 5.5 * 60 * 60 * 1000;
-
-  //   const processedData = data.map((entry: any) => {
-  //     const DeviceUID = entry.DeviceUID;
-  //     const deviceOption = this.deviceOptions.find(device => device.DeviceUID === DeviceUID);
-
-  //     const timestamp = new Date(entry.bucket_start_time).getTime() + istOffset;
-  //     const flowRate = entry.flowRate ? parseFloat(entry.flowRate).toFixed(1) : 'Offline';
-
-  //     // Format the date as 'Jan 21, 2024, 5:30:00 AM'
-  //     const formattedDate = new Date(timestamp).toLocaleString('en-US', {
-  //       month: 'short',
-  //       day: 'numeric',
-  //       year: 'numeric',
-  //       hour: 'numeric',
-  //       minute: 'numeric',
-  //       second: 'numeric',
-  //       hour12: true,
-  //     });
-
-  //     return {
-  //       DeviceName: deviceOption ? deviceOption.DeviceName : '',
-  //       DeviceUID : DeviceUID,
-  //       Date: formattedDate,
-  //       flowRate: flowRate
-  //     };
-  //   });
-
-  //   this.dataSource.data = processedData;
-  //   this.dataSource.paginator = this.paginator;
-  //   console.log(this.dataSource);
-  // }
-
-  // processChartDataWSFSTotal(response: any) {
-  //   const data = response.data;
-  //   const istOffset = 5.5 * 60 * 60 * 1000;
-
-  //   const processedData = data.map((entry: any) => {
-  //     const DeviceUID = entry.DeviceUID;
-  //     const deviceOption = this.deviceOptions.find(device => device.DeviceUID === DeviceUID);
-
-  //     const timestamp = new Date(entry.TimeStamp);
-  //     const totalVolume = entry.totalVolume ? parseFloat(entry.totalVolume).toFixed(1) : 'Offline';
-
-  //     // Format the date as 'Jan 21, 2024, 5:30:00 AM'
-  //     const formattedDate = new Date(timestamp).toLocaleString('en-US', {
-  //       month: 'short',
-  //       day: 'numeric',
-  //       year: 'numeric',
-  //       hour: 'numeric',
-  //       minute: 'numeric',
-  //       second: 'numeric',
-  //       hour12: true,
-  //     });
-
-  //     return {
-  //       DeviceName: deviceOption ? deviceOption.DeviceName : '',
-  //       DeviceUID : DeviceUID,
-  //       Date: formattedDate,
-  //       totalVolume: totalVolume
-  //     };
-  //   });
-
-  //   this.dataSource.data = processedData;
-  //   this.dataSource.paginator = this.paginator;
-  //   console.log(this.dataSource);
-  // }
 mergeChartData(responseWSFS: any, responseWSFSTotal: any) {
   const processedDataWSFS = this.processChartDataWSFS(responseWSFS);
   const processedDataWSFSTotal = this.processChartDataWSFSTotal(responseWSFSTotal);
@@ -412,15 +355,16 @@ processChartDataWSFS(response: any) {
     const flowRate = entry.flowRate ? parseFloat(entry.flowRate).toFixed(1) : 'Offline';
 
     // Format the date as 'Jan 21, 2024, 5:30:00 AM'
-    const formattedDate = new Date(timestamp).toLocaleString('en-US', {
-      month: 'short',
-      day: 'numeric',
-      year: 'numeric',
-      hour: 'numeric',
-      minute: 'numeric',
-      second: 'numeric',
-      hour12: true,
-    });
+    // const formattedDate = new Date(timestamp).toLocaleString('en-US', {
+    //     year: 'numeric',
+    //     month: '2-digit',
+    //     day: '2-digit',
+    //     hour: '2-digit',
+    //     minute: '2-digit',
+    //     second: '2-digit',
+    //     hour12: true,
+    // });
+    const formattedDate = new Date(timestamp).toISOString().replace(/T/, ' ').replace(/\..+/, '');
 
     return {
       DeviceName: deviceOption ? deviceOption.DeviceName : '',
