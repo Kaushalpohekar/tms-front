@@ -178,18 +178,26 @@ export class TempComponent implements OnInit {
 
       if (trigger) {
         let temperature; // Variable to hold the temperature value
+        console.log(deviceTrigger)
 
         // Check if individual temperature parameters (R, Y, B) are available
         if ('TemperatureR' in deviceTrigger && 'TemperatureY' in deviceTrigger && 'TemperatureB' in deviceTrigger) {
-          temperature = {
-            R: deviceTrigger.TemperatureR,
-            Y: deviceTrigger.TemperatureY,
-            B: deviceTrigger.TemperatureB,
-          };
-        } else if ('Temperature' in deviceTrigger) {
-          // Check if a single "Temperature" value is available
-          temperature = deviceTrigger.Temperature;
-        }
+          if (deviceTrigger.TemperatureR === null || deviceTrigger.TemperatureY === null || deviceTrigger.TemperatureB === null || deviceTrigger.TemperatureR === undefined || deviceTrigger.TemperatureY === undefined || deviceTrigger.TemperatureB === undefined)
+            {
+              temperature = deviceTrigger.Temperature;
+          } else {
+              temperature = {
+                  R: deviceTrigger.TemperatureR,
+                  Y: deviceTrigger.TemperatureY,
+                  B: deviceTrigger.TemperatureB,
+              };
+          }
+      }
+        // else if ('Temperature' in deviceTrigger) {
+        //   // Check if a single "Temperature" value is available
+        //   temperature = deviceTrigger.Temperature;
+        //   console.log("TH Card:-", temperature);
+        // }
 
         // Ensure that temperature data is available
         if (temperature !== undefined) {
