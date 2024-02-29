@@ -145,7 +145,7 @@ export class DataComponent implements OnInit{
   async retrievingAllValues() {
     try {
       let dataWSPromise, dataPromise;
-      if (this.DeviceType === 'ws' || this.DeviceType === 'fs') {
+      if (this.DeviceType === 'ws' || this.DeviceType === 'fs' || this.DeviceType === 'ps') {
         if (this.deviceINTERVAL === 'Custom') {
           dataWSPromise = this.DashDataService.getCustomConsumption(this.deviceID, this.deviceSTART, this.deviceEND).toPromise();
         } else {
@@ -537,10 +537,21 @@ export class DataComponent implements OnInit{
       case 't':
         this.createChart();
         break;
+      case 'h':
+        this.createChart2();
+        break;
       case 'ryb':
         this.createTemperature();
         break;
       case 'ws':
+        this.createChart3();
+        this.createBarGraph();
+        break;
+        case 'fs':
+        this.createChart3();
+        this.createBarGraph();
+        break;
+        case 'ps':
         this.createChart3();
         this.createBarGraph();
         break;

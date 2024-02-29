@@ -38,10 +38,12 @@
 	            <mat-label>Device Type</mat-label>
 	            <mat-select [formControl]="DeviceType" >
 	            	<mat-option value="t">Temprature</mat-option>
+					<mat-option value="h">Humidity</mat-option>
 	            	<mat-option value="th">Temperature - TH</mat-option>
 					<mat-option value="ryb">Temperature - RYB</mat-option>
 					<mat-option value="ws">Water Flow Sensor</mat-option>
-					<mat-option value="fs">Flow Sensor</mat-option>			  
+					<mat-option value="fs">Flow Sensor</mat-option>	
+					<mat-option value="ps">Pressure Sensor</mat-option>			  
 	            </mat-select>
 	            <mat-error *ngIf="DeviceType.invalid">Device Type is Required.</mat-error>
 	        </mat-form-field>
