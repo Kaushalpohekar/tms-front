@@ -1,4 +1,6 @@
-<div *ngIf="dashService.pageLoading"><app-page-loading></app-page-loading></div>
+<div *ngIf="dashService.pageLoading">
+  <app-page-loading></app-page-loading>
+</div>
 <div *ngIf="!dashService.pageLoading">
 <section class="cards container-fluid">
   <div class="row">
@@ -59,6 +61,12 @@
                   <div class="image-text"> {{ (deviceData[getIndex(device.DeviceUID)]?.Temperature|| 0).toFixed(0) }} &deg;C</div>
                 </div>
               </div>
+              <div class="row" *ngIf="device.DeviceType === 'h'">
+                <div class="col-12 d-flex">
+                  <img src="../../../../assets/img/hm.gif" class="card-img">
+                  <div class="image-text"> {{ (deviceData[getIndex(device.DeviceUID)]?.Temperature|| 0).toFixed(0) }} &deg;C</div>
+                </div>
+              </div>
               <div class="row" *ngIf="device.DeviceType === 'ws'">
                 <div class="col-4 d-flex">
                   <img src="../../../../assets/img/ws1.png" class="card-img-ryb">
@@ -109,13 +117,40 @@
                     </span>This Month</div>
                 </div>
               </div>
+              <div class="row" *ngIf="device.DeviceType === 'ps'">
+                <div class="col-4 d-flex">
+                  <img src="../../../../assets/img/ws1.png" class="card-img-ryb">
+                  <div class="image-text-ws-3">{{ (deviceData[getIndex(device.DeviceUID)]?.flowRate || 00).toFixed(0) }} 
+                    <div class="image-text-ws-3">l/hr</div>
+                  </div>
+                </div>
+                <div class="col-4">
+                  <div class="image-text-ws">{{ consumptionData[getIndexConsumption(device.DeviceUID)]?.todayConsumption|| 0 }} L</div>
+                  <div class="image-text-ws-2">
+                    <span class="{{ consumptionData[getIndexConsumption(device.DeviceUID)]?.percentageChange >= 0 ? 'up' : 'down' }}">
+                      {{ getAbsPercentageChange(consumptionData[getIndexConsumption(device.DeviceUID)]?.percentageChange).arrow }}
+                      {{ getAbsPercentageChange(consumptionData[getIndexConsumption(device.DeviceUID)]?.percentageChange).value || 0 }}%
+                    </span>
+                    Today
+                  </div>
+                </div>
+                <div class="col-4">
+                  <div class="image-text-ws">{{ consumptionData[getIndexConsumption(device.DeviceUID)]?.thisMonthConsumption }} KL</div>
+                  <div class="image-text-ws-2"><span class="{{ consumptionData[getIndexConsumption(device.DeviceUID)]?.monthlyPercentageChange >= 0 ? 'up' : 'down' }}">
+                      {{ getAbsPercentageChange(consumptionData[getIndexConsumption(device.DeviceUID)]?.monthlyPercentageChange).arrow }}
+                      {{ getAbsPercentageChange(consumptionData[getIndexConsumption(device.DeviceUID)]?.monthlyPercentageChange).value|| 0 }}%
+                    </span>This Month</div>
+                </div>
+              </div>
             </mat-card-content>
           </mat-card>
           <div class="type-text" *ngIf="device.DeviceType === 'ryb'">RYB</div>
           <div class="type-text" *ngIf="device.DeviceType === 't'">Temperature</div>
+          <div class="type-text" *ngIf="device.DeviceType === 'h'">Humidity</div>
           <div class="type-text" *ngIf="device.DeviceType === 'th'">Temp-Humdity</div>
           <div class="type-text" *ngIf="device.DeviceType === 'ws'">Water Sensor</div>
           <div class="type-text" *ngIf="device.DeviceType === 'fs'">Flow  Sensor</div>
+          <div class="type-text" *ngIf="device.DeviceType === 'ps'">Pressure Sensor</div>
         </div>
         <div class="col-2" *ngIf="getUserType() === 'Admin'">
           <div class="d-flex flex-column align-items-left">
@@ -132,3 +167,6 @@
   </div>
 </section>
 </div>
+<button mat-mini-fab class="filter-button" (click)="openDashFilterDailog()">
+  <mat-icon>filter_list</mat-icon>
+</button>
