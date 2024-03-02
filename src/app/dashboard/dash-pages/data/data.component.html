@@ -91,6 +91,20 @@
 							<div class="row pt-2 mb-2">
 								<div class="col-lg-12 col-md-6 pt-2 mb-2">
 									<div class="temp th-hum d-flex">
+										FlowRate: <div class="ms-auto">{{ DeviceFlowRate }} l/hr</div>
+									</div>
+								</div>
+								<div class="col-lg-12 col-md-6 pt-2 mb-2">
+									<div class="temp th-hum d-flex">
+										Today Consumption: <div class="ms-auto">{{ DeviceTodayConsumption }} KL</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div *ngIf="DeviceType === 'ps'">
+							<div class="row pt-2 mb-2">
+								<div class="col-lg-12 col-md-6 pt-2 mb-2">
+									<div class="temp th-hum d-flex">
 										PressureRate: <div class="ms-auto">{{ DeviceFlowRate }} l/hr</div>
 									</div>
 								</div>
@@ -149,13 +163,6 @@
 				  </mat-card-content>
 				</mat-card>
 			</div>
-			<div *ngIf="DeviceType === 'h'">
-				<mat-card class="mb-2 data-charts-2">
-				  <mat-card-content>
-				  	<div id="curvedLineChart2" class="chart-container-2"></div>
-				  </mat-card-content>
-				</mat-card>
-			</div>
 
 			<div *ngIf="DeviceType === 'ryb'">
 				<mat-card class="mb-2 data-charts-2">
@@ -202,6 +209,19 @@
 				  </mat-card-content>
 				</mat-card>
 			</div>
+            <div *ngIf="DeviceType === 'ps'">
+				<mat-card class="mb-2 data-charts">
+				  <mat-card-content>
+				  	<div id="curvedLineChart3" class="chart-container"></div>
+				  </mat-card-content>
+				</mat-card>
+				<mat-card class="mb-2 data-charts">
+				  <mat-card-content>
+				  	<div id="barChart" class="chart-container"></div>
+				  </mat-card-content>
+				</mat-card>
+			</div>
+			
 		</div>
 	</div>
 </section>

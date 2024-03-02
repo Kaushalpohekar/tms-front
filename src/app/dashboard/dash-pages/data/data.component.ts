@@ -547,14 +547,6 @@ export class DataComponent implements OnInit{
         this.createChart3();
         this.createBarGraph();
         break;
-      case 'ps':
-        this.createChart3();
-        this.createBarGraph();
-        break;
-      case 'fs':
-        this.createChart3();
-        this.createBarGraph();
-        break;
       default:
         this.snackBar.open('Device Type is not found!', 'Dismiss', { duration: 2000 });
     }
