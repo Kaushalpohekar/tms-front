@@ -145,7 +145,7 @@ export class DataComponent implements OnInit{
   async retrievingAllValues() {
     try {
       let dataWSPromise, dataPromise;
-      if (this.DeviceType === 'ws' || this.DeviceType === 'fs') {
+      if (this.DeviceType === 'ws' || this.DeviceType === 'fs' || this.DeviceType === 'ps') {
         if (this.deviceINTERVAL === 'Custom') {
           dataWSPromise = this.DashDataService.getCustomConsumption(this.deviceID, this.deviceSTART, this.deviceEND).toPromise();
         } else {
@@ -155,7 +155,7 @@ export class DataComponent implements OnInit{
         dataPromise = this.deviceINTERVAL === 'Custom' ?
           this.DashDataService.DataByCustomDate(this.deviceID, this.deviceSTART, this.deviceEND).toPromise() :
           this.DashDataService.dataLast(this.deviceID, this.deviceINTERVAL).toPromise();
-      } else if (this.DeviceType === 't' || this.DeviceType === 'th' || this.DeviceType === 'ryb') {
+      } else if (this.DeviceType === 't' || this.DeviceType === 'th' || this.DeviceType === 'ryb' || this.DeviceType === 'h' ) {
         dataPromise = this.deviceINTERVAL === 'Custom' ?
           this.DashDataService.DataByCustomDate(this.deviceID, this.deviceSTART, this.deviceEND).toPromise() :
           this.DashDataService.dataLast(this.deviceID, this.deviceINTERVAL).toPromise();
@@ -536,6 +536,9 @@ export class DataComponent implements OnInit{
         break;
       case 't':
         this.createChart();
+        break;
+      case 'h':
+        this.createChart2();
         break;
       case 'ryb':
         this.createTemperature();

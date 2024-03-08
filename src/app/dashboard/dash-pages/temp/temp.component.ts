@@ -7,6 +7,7 @@ import { AuthService } from '../../../login/auth/auth.service';
 import{ DashService } from '../../dash.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { interval } from 'rxjs';
+import { FilterComponent } from '../../dash-component/filter/filter.component';
 
 @Component({
   selector: 'app-temp',
@@ -226,7 +227,7 @@ export class TempComponent implements OnInit {
 CombinedConsumption() {
   if (this.CompanyEmail) {
     this.dashDataService.getTodayConsumption(this.CompanyEmail)
-      .toPromise()
+      .toPromise() 
       .then((todayData: any[]) => {
         this.consumptionData = [];
 
@@ -307,15 +308,24 @@ CombinedConsumption() {
   }
 }
 
-
-
-
-
-
-
   getAbsPercentageChange(percentageChange: number | undefined): { value: number | undefined, arrow: string } {
     const absValue = percentageChange ? Math.floor(Math.abs(percentageChange)) : undefined;
     const arrow = percentageChange && percentageChange >= 0 ? '▲' : '▼';
     return { value: absValue, arrow: arrow };
+  }
+  openDashFilterDailog(): void {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.width = '500px';
+    dialogConfig.height = 'auto';
+    dialogConfig.maxWidth = '90vw';
+
+    const dialogRef = this.dialog.open(FilterComponent, dialogConfig);
+
+    dialogRef.afterClosed().subscribe((result) => {
+      this.retrievingValues();
+    });
+  }
+  retrievingValues() {
+    throw new Error('Method not implemented.');
   }
 }

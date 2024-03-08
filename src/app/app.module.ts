@@ -11,6 +11,8 @@ import { MqttModule, IMqttServiceOptions } from 'ngx-mqtt';
 
 import { HashLocationStrategy,LocationStrategy } from '@angular/common';
 
+
+
 // const MQTT_SERVICE_OPTIONS: IMqttServiceOptions = {
 //   hostname: 'dashboard.senselive.in',
 //   port: 8885,
@@ -30,7 +32,7 @@ import { HashLocationStrategy,LocationStrategy } from '@angular/common';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
   ],
   imports: [
     BrowserModule,

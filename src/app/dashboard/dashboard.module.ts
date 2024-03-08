@@ -51,6 +51,8 @@ import { AddUserComponent } from './dash-component/add-user/add-user.component';
 import { AddDeviceComponent } from './dash-component/add-device/add-device.component';
 import { PageLoadingComponent } from './dash-loading/page-loading/page-loading.component';
 
+import { DashFilterComponent } from './dash-component/dash-filter/dash-filter.component';
+
 @NgModule({
   declarations: [
     NavbarComponent,
@@ -68,7 +70,8 @@ import { PageLoadingComponent } from './dash-loading/page-loading/page-loading.c
     AddUserComponent,
     AddDeviceComponent,
     PageLoadingComponent,
-    AppMqttComponent
+    AppMqttComponent,
+    DashFilterComponent
   ],
   imports: [
     CommonModule,

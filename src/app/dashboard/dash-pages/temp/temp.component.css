@@ -96,6 +96,14 @@
   font-size: 10px;
 }
 
+.filter-button {
+  position: fixed;
+  bottom: 50px;
+  right: 25px;
+  background-color: #3F51B5;
+  color: whitesmoke;
+}
+
 @media (max-width: 375px) {
 	.device-name{
 		font-size: 0.8rem;
