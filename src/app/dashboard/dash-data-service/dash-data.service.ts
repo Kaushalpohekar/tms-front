@@ -61,12 +61,8 @@ export class DashDataService {
     return sessionStorage.getItem('FilterEndDate');
   }
 
-  deleteDevice(deviceUid: string) {
-    throw new Error('Method not implemented.');
-  }
-
-  //private readonly API_URL = 'https://ec2-13-200-38-129.ap-south-1.compute.amazonaws.com:3000';
-   private readonly API_URL = 'http://localhost:3000';
+  private readonly API_URL = 'https://tms.senselive.in:3000';
+  //private readonly API_URL = 'http://localhost:3000';
 
   userDevices(CompanyEmail: string): Observable<any> {
     return this.http.get(`${this.API_URL}/userdevices/${CompanyEmail}`);
@@ -159,6 +155,9 @@ export class DashDataService {
     return this.http.delete(`${this.API_URL}/removeUser/${userId}`);
   }
 
+  deleteDevice(deviceUid: string) {
+    return this.http.delete(`${this.API_URL}/delete-device/${deviceUid}`);
+  }
 
   getTodayConsumption(CompanyEmail: string): Observable<any> {
     return this.http.get(`${this.API_URL}/Total-Volume-Today-Email/${CompanyEmail}`);

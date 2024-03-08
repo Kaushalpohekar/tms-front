@@ -155,6 +155,13 @@
   color: transparent; /* Make the text transparent */
 }
 
+.th-ps{
+	background: linear-gradient(to right, #0572a1, #4291b3, #6598ad);
+  -webkit-background-clip: text; /* For WebKit/Blink browsers like Chrome and Safari */
+  background-clip: text;
+  color: transparent; /* Make the text transparent */
+}
+
 .th-hum{
 	background: linear-gradient(to right, #0572a1, #4291b3, #6598ad);
   -webkit-background-clip: text; /* For WebKit/Blink browsers like Chrome and Safari */

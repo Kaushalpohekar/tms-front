@@ -6,7 +6,8 @@ import { DashDataService } from '../../dash-data-service/dash-data.service';
 import { AuthService } from '../../../login/auth/auth.service';
 import{ DashService } from '../../dash.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { interval } from 'rxjs';
+import { interval, Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { FilterComponent } from '../../dash-component/filter/filter.component';
 
 @Component({
@@ -15,6 +16,9 @@ import { FilterComponent } from '../../dash-component/filter/filter.component';
   styleUrls: ['./temp.component.css']
 })
 export class TempComponent implements OnInit {
+  private destroy$ = new Subject<void>();
+
+
   userDevices: any[] = [];
   CompanyEmail!: string | null; 
   deviceData: any[] = [];
@@ -39,6 +43,12 @@ export class TempComponent implements OnInit {
     this.dashService.isPageLoading(true);
   }
 
+  ngOnDestroy() {
+    // Complete the subject to signal the subscription to unsubscribe
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
   getUserType(): string | null {
     return this.authService.getUserType();
   }
@@ -46,12 +56,16 @@ export class TempComponent implements OnInit {
   getUserDevices() {
     this.CompanyEmail = this.authService.getCompanyEmail();
     if (this.CompanyEmail) {
-      this.dashDataService.userDevices(this.CompanyEmail).subscribe(
+      this.dashDataService.userDevices(this.CompanyEmail).pipe(
+        takeUntil(this.destroy$)
+      ).subscribe(
         (devices: any) => {
           this.userDevices = devices.devices;
           this.getDeviceData();
 
-          interval(60 * 1000).subscribe(() => {
+          interval(60 * 1000).pipe(
+            takeUntil(this.destroy$)
+          ).subscribe(() => {
             this.getDeviceData();
             this.CombinedConsumption();
           });
@@ -136,6 +150,7 @@ export class TempComponent implements OnInit {
           TemperatureY: entryData.TemperatureY ? parseFloat(entryData.TemperatureY) : undefined,
           TemperatureB: entryData.TemperatureB ? parseFloat(entryData.TemperatureB) : undefined,
           flowRate: entryData.flowRate ? parseInt(entryData.flowRate) : undefined,
+          Pressure: entryData.Pressure ? parseFloat(entryData.Pressure) : undefined,
           totalVolume: entryData.totalVolume ? parseInt(entryData.totalVolume) : undefined,
           Timestamp: timestampIST.toISOString() // Convert back to ISO string
         };
@@ -179,7 +194,6 @@ export class TempComponent implements OnInit {
 
       if (trigger) {
         let temperature; // Variable to hold the temperature value
-        console.log(deviceTrigger)
 
         // Check if individual temperature parameters (R, Y, B) are available
         if ('TemperatureR' in deviceTrigger && 'TemperatureY' in deviceTrigger && 'TemperatureB' in deviceTrigger) {
@@ -194,11 +208,6 @@ export class TempComponent implements OnInit {
               };
           }
       }
-        // else if ('Temperature' in deviceTrigger) {
-        //   // Check if a single "Temperature" value is available
-        //   temperature = deviceTrigger.Temperature;
-        //   console.log("TH Card:-", temperature);
-        // }
 
         // Ensure that temperature data is available
         if (temperature !== undefined) {

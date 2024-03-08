@@ -152,13 +152,54 @@ export class UserManageComponent implements OnInit, OnDestroy {
     console.log('Editing Device');
   }
 
-  // Function to delete a user
-  deleteDevice(device: DeviceData): void {
+  deleteDevice(device: DeviceData) {
     const deviceid = device.DeviceUID;
-    console.log(deviceid);
-
-    // add more code when api is created
-    
+  
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!"
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // User clicked 'Yes' in the confirmation dialog
+        this.dashDataService.deleteDevice(deviceid).subscribe(
+          () => {
+            // User deleted successfully
+            Swal.fire({
+              title: "Deleted!",
+              text: "Device has been deleted.",
+              icon: "success",
+              timer: 2000,
+              timerProgressBar: true
+            });
+  
+            // Remove the deleted user from the local data source
+            const index = this.dataSource2.indexOf(device);
+            if (index !== -1) {
+              this.dataSource2.splice(index, 1);
+            }
+  
+            // Update the MatTableDataSource
+            this.dataSource2 = [...this.dataSource2];
+          },
+          (error) => {
+            // Error deleting user
+            console.error('Error deleting user:', error);
+            Swal.fire({
+              title: "Error",
+              text: "Error deleting user",
+              icon: "error",
+              timer: 2000,
+              timerProgressBar: true
+            });
+          }
+        );
+      }
+    });
   }
 
   deleteUser(user: UserData) {

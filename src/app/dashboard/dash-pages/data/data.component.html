@@ -68,7 +68,7 @@
 							<div class="row mb-2">
 								<div class="col-lg-12 col-md-4">
 									<div class="temp th-temp d-flex">
-										Humidity : <div class="ms-auto">{{ DeviceTemperature }}</div>
+										Humidity : <div class="ms-auto">{{ DeviceHumidity }}</div>
 									</div>
 								</div>
 							</div>
@@ -88,36 +88,31 @@
 							</div>
 						</div>
 						<div *ngIf="DeviceType === 'ps'">
-							<div class="row pt-2 mb-2">
-								<div class="col-lg-12 col-md-6 pt-2 mb-2">
-									<div class="temp th-hum d-flex">
-										FlowRate: <div class="ms-auto">{{ DeviceFlowRate }} l/hr</div>
-									</div>
-								</div>
-								<div class="col-lg-12 col-md-6 pt-2 mb-2">
-									<div class="temp th-hum d-flex">
-										Today Consumption: <div class="ms-auto">{{ DeviceTodayConsumption }} KL</div>
+							<div class="row mb-2">
+								<div class="col-lg-12 col-md-4">
+									<div class="temp th-ps d-flex">
+										Pressure : <div class="ms-auto">{{ DevicePressure }}  m³/hr</div>
 									</div>
 								</div>
 							</div>
 						</div>
-						<div *ngIf="DeviceType === 'ps'">
+						<div *ngIf="DeviceType === 'fs'">
 							<div class="row pt-2 mb-2">
 								<div class="col-lg-12 col-md-6 pt-2 mb-2">
 									<div class="temp th-hum d-flex">
-										PressureRate: <div class="ms-auto">{{ DeviceFlowRate }} l/hr</div>
+										PressureRate: <div class="ms-auto">{{ DeviceFlowRate }} kg/hr</div>
 									</div>
 								</div>
 								<div class="col-lg-12 col-md-6 pt-2 mb-2">
 									<div class="temp th-hum d-flex">
-										Today Consumption: <div class="ms-auto">{{ DeviceTodayConsumption }} KL</div>
+										Today Consumption: <div class="ms-auto">{{ DeviceTodayConsumption }} KG</div>
 									</div>
 								</div>
 							</div>
 						</div>
-				    <div class="panel-device-time">
+				    <!-- <div class="panel-device-time">
 				      Last Updated: <span>{{ DeviceLastUpdatedTime }}</span>
-				    </div>
+				    </div> -->
 				  </mat-card-content>
 				</div>
 			</mat-card>
@@ -192,32 +187,16 @@
 				  </mat-card-content>
 				</mat-card>
 				<mat-card class="mb-2 data-charts">
-				  <mat-card-content>'CUSTOM_ELEMENTS_SCHEMA' to the '@NgModule.schemas' of this component to suppress this message.
+				  <mat-card-content>
 				  	<div id="barChart" class="chart-container"></div>
 				  </mat-card-content>
 				</mat-card>
 			</div>
+
 			<div *ngIf="DeviceType === 'ps'">
-				<mat-card class="mb-2 data-charts">
+				<mat-card class="mb-2 data-charts-2">
 				  <mat-card-content>
-				  	<div id="curvedLineChart3" class="chart-container"></div>
-				  </mat-card-content>
-				</mat-card>
-				<mat-card class="mb-2 data-charts">
-				  <mat-card-content>
-				  	<div id="barChart" class="chart-container"></div>
-				  </mat-card-content>
-				</mat-card>
-			</div>
-            <div *ngIf="DeviceType === 'ps'">
-				<mat-card class="mb-2 data-charts">
-				  <mat-card-content>
-				  	<div id="curvedLineChart3" class="chart-container"></div>
-				  </mat-card-content>
-				</mat-card>
-				<mat-card class="mb-2 data-charts">
-				  <mat-card-content>
-				  	<div id="barChart" class="chart-container"></div>
+				  	<div id="curvedLineChart4" class="chart-container-2"></div>
 				  </mat-card-content>
 				</mat-card>
 			</div>

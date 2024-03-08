@@ -4,16 +4,6 @@
 <div *ngIf="!dashService.pageLoading">
 <section class="cards container-fluid">
   <div class="row">
-<!--     <div class="col-lg-12 col-md-12 col-sm-12">
-      <mat-card class="title-card">
-        <mat-card-content>
-          <div class="d-flex">
-            <p class="title-card-head">Hello, {{ fname }} {{ lname }}</p>
-          <p class="ms-auto title-card-head">Welcome to the Dashbord</p>
-        </div>
-        </mat-card-content>
-      </mat-card>
-    </div> -->
     <div class="col-lg-4 col-md-6 col-sm-12 mb-3" *ngFor="let device of userDevices">
       <div class="row">
         <div class="col-{{ getUserType() === 'Admin' ? '10' : '12' }}">
@@ -96,11 +86,11 @@
                 <div class="col-4 d-flex">
                   <img src="../../../../assets/img/ws1.png" class="card-img-ryb">
                   <div class="image-text-ws-3">{{ (deviceData[getIndex(device.DeviceUID)]?.flowRate || 00).toFixed(0) }} 
-                    <div class="image-text-ws-3">l/hr</div>
+                    <div class="image-text-ws-3">kg/hr</div>
                   </div>
                 </div>
                 <div class="col-4">
-                  <div class="image-text-ws">{{ consumptionData[getIndexConsumption(device.DeviceUID)]?.todayConsumption|| 0 }} L</div>
+                  <div class="image-text-ws">{{ consumptionData[getIndexConsumption(device.DeviceUID)]?.todayConsumption|| 0 }} KG</div>
                   <div class="image-text-ws-2">
                     <span class="{{ consumptionData[getIndexConsumption(device.DeviceUID)]?.percentageChange >= 0 ? 'up' : 'down' }}">
                       {{ getAbsPercentageChange(consumptionData[getIndexConsumption(device.DeviceUID)]?.percentageChange).arrow }}
@@ -110,7 +100,7 @@
                   </div>
                 </div>
                 <div class="col-4">
-                  <div class="image-text-ws">{{ consumptionData[getIndexConsumption(device.DeviceUID)]?.thisMonthConsumption }} KL</div>
+                  <div class="image-text-ws">{{ consumptionData[getIndexConsumption(device.DeviceUID)]?.thisMonthConsumption }} Tonne</div>
                   <div class="image-text-ws-2"><span class="{{ consumptionData[getIndexConsumption(device.DeviceUID)]?.monthlyPercentageChange >= 0 ? 'up' : 'down' }}">
                       {{ getAbsPercentageChange(consumptionData[getIndexConsumption(device.DeviceUID)]?.monthlyPercentageChange).arrow }}
                       {{ getAbsPercentageChange(consumptionData[getIndexConsumption(device.DeviceUID)]?.monthlyPercentageChange).value|| 0 }}%
@@ -118,28 +108,9 @@
                 </div>
               </div>
               <div class="row" *ngIf="device.DeviceType === 'ps'">
-                <div class="col-4 d-flex">
-                  <img src="../../../../assets/img/ws1.png" class="card-img-ryb">
-                  <div class="image-text-ws-3">{{ (deviceData[getIndex(device.DeviceUID)]?.flowRate || 00).toFixed(0) }} 
-                    <div class="image-text-ws-3">l/hr</div>
-                  </div>
-                </div>
-                <div class="col-4">
-                  <div class="image-text-ws">{{ consumptionData[getIndexConsumption(device.DeviceUID)]?.todayConsumption|| 0 }} L</div>
-                  <div class="image-text-ws-2">
-                    <span class="{{ consumptionData[getIndexConsumption(device.DeviceUID)]?.percentageChange >= 0 ? 'up' : 'down' }}">
-                      {{ getAbsPercentageChange(consumptionData[getIndexConsumption(device.DeviceUID)]?.percentageChange).arrow }}
-                      {{ getAbsPercentageChange(consumptionData[getIndexConsumption(device.DeviceUID)]?.percentageChange).value || 0 }}%
-                    </span>
-                    Today
-                  </div>
-                </div>
-                <div class="col-4">
-                  <div class="image-text-ws">{{ consumptionData[getIndexConsumption(device.DeviceUID)]?.thisMonthConsumption }} KL</div>
-                  <div class="image-text-ws-2"><span class="{{ consumptionData[getIndexConsumption(device.DeviceUID)]?.monthlyPercentageChange >= 0 ? 'up' : 'down' }}">
-                      {{ getAbsPercentageChange(consumptionData[getIndexConsumption(device.DeviceUID)]?.monthlyPercentageChange).arrow }}
-                      {{ getAbsPercentageChange(consumptionData[getIndexConsumption(device.DeviceUID)]?.monthlyPercentageChange).value|| 0 }}%
-                    </span>This Month</div>
+                <div class="col-12 d-flex">
+                  <img src="../../../../assets/img/ps.png" class="card-img">
+                  <div class="image-text"> {{ (deviceData[getIndex(device.DeviceUID)]?.Pressure|| 0).toFixed(0) }} m³/hr</div>
                 </div>
               </div>
             </mat-card-content>
@@ -167,6 +138,6 @@
   </div>
 </section>
 </div>
-<button mat-mini-fab class="filter-button" (click)="openDashFilterDailog()">
+<!-- <button mat-mini-fab class="filter-button" (click)="openDashFilterDailog()">
   <mat-icon>filter_list</mat-icon>
-</button>
+</button> -->
