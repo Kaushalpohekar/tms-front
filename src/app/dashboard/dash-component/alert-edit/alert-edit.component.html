@@ -1,0 +1,59 @@
+<div class="container-fluid">
+	<div class="row model-head mb-2">
+	  <div class="col-lg-12 col-md-6 col-sm-6 pt-1">
+		<div class="model-title">Edit Device</div>
+	  </div>
+	</div>
+	<div class="row">
+	  <div class="col-md-6 mb-2">
+		<mat-form-field class="from-field">
+		  <mat-label>Device Name</mat-label>
+		  <input matInput [formControl]="DeviceName" required>
+		  <mat-error *ngIf="DeviceName.invalid">Device Name is Required.</mat-error>
+		</mat-form-field>
+	  </div>
+	  <div class="col-md-6 mb-2">
+		<mat-form-field class="from-field">
+		  <mat-label>Device UID</mat-label>
+		  <input matInput [formControl]="DeviceUID" required>
+		  <mat-error *ngIf="DeviceUID.invalid">Device UID is required</mat-error>
+		</mat-form-field>
+	  </div>
+	  <div class="col-md-6 mb-2">
+		<mat-form-field class="from-field">
+		  <mat-label>Threshold</mat-label>
+		  <input matInput [formControl]="TriggerValue" required>
+		  <mat-error *ngIf="TriggerValue.invalid">Threshold is Required.</mat-error>
+		</mat-form-field>
+	  </div>
+	  <div class="col-md-6 mb-2">
+		<mat-form-field class="from-field">
+		  <mat-label>User Mail</mat-label>
+		  <input matInput [formControl]="PersonalEmail" required>
+		  <mat-error *ngIf="PersonalEmail.invalid">Mail is Required.</mat-error>
+		</mat-form-field>
+	  </div>
+	  <div class="col-md-6 mb-2">
+		<mat-form-field class="from-field">
+		  <mat-label>User Phone</mat-label>
+		  <input matInput [formControl]="ContactNO" required>
+		  <mat-error *ngIf="ContactNO.invalid">Phone No. is Required.</mat-error>
+		</mat-form-field>
+	  </div>
+	  <div class="col-md-6 mb-2">
+		<mat-form-field class="from-field">
+		  <mat-label>Interval</mat-label>
+		  <input matInput [formControl]="interval" required>
+		  <mat-error *ngIf="interval.invalid">Interval is Required.</mat-error>
+		</mat-form-field>
+	  </div>
+	</div>
+	<div class="row">
+	  <div class="col-6 justify-content-end d-flex mb-2">
+		<button mat-raised-button (click)="onNoClick()">Close</button>
+	  </div>
+	  <div class="col-6 mb-2">
+		<button mat-raised-button color="primary" (click)="onSaveClick()">Update</button>
+	  </div>
+	</div>
+  </div>

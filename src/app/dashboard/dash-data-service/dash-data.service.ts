@@ -61,8 +61,8 @@ export class DashDataService {
     return sessionStorage.getItem('FilterEndDate');
   }
 
-  private readonly API_URL = 'https://tms.senselive.in:3000';
-  //private readonly API_URL = 'http://localhost:3000';
+  //private readonly API_URL = 'https://tms.senselive.in:3000';
+  private readonly API_URL = 'http://localhost:3000';
 
   userDevices(CompanyEmail: string): Observable<any> {
     return this.http.get(`${this.API_URL}/userdevices/${CompanyEmail}`);
@@ -181,5 +181,25 @@ export class DashDataService {
 
   getDeviceData(CompanyEmail: string): Observable <any> {
     return this.http.get(`${this.API_URL}/fetchLatestEntry/${CompanyEmail}`);
+  }
+
+  getTriggersData(CompanyEmail: string): Observable <any> {
+    return this.http.get(`${this.API_URL}/getTriggerDataForAlert/${CompanyEmail}`);
+  }
+
+  deleteTrigger(DeviceUID:string): Observable <any> {
+    return this.http.delete(`${this.API_URL}/deletetrigger/${DeviceUID}`);
+  }
+
+  updateTrigger(DeviceUID: string, triggerData: any) :Observable<any> {
+    return this.http.put(`${this.API_URL}/updateTrigger/${DeviceUID}`, triggerData);
+  }
+
+  UpdateWhatsapp(DeviceUID: string, WhatsApp:any) :Observable<any> {
+    return this.http.put(`${this.API_URL}/UpdateWhatsapp/${DeviceUID}`, WhatsApp);
+  }
+
+  UpdateMail(DeviceUID: string, Mail:any) :Observable<any> {
+    return this.http.put(`${this.API_URL}/UpdateMail/${DeviceUID}`, Mail);
   }
 }

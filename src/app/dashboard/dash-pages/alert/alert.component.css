@@ -1,0 +1,25 @@
+.alert{
+  padding-top: 13vh;
+  padding-bottom: 5vh;
+}
+
+@media(max-width:425px){
+  .alert{
+    padding-top: 75px;
+    padding-bottom: 20px;
+  }
+}
+
+@media(min-width:425px) and (max-width:576px){
+  .alert{
+    padding-top: 75px;
+    padding-bottom: 20px;
+  }
+}
+
+@media(min-width:576px) and (max-width:1024px){
+  .alert{
+    padding-top: 75px;
+    padding-bottom: 20px;
+  }
+}

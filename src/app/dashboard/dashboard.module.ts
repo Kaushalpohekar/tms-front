@@ -40,6 +40,7 @@ import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
 import {MatChipsModule} from '@angular/material/chips';
 import { MatPaginatorModule } from '@angular/material/paginator';
+import {MatCheckboxModule} from '@angular/material/checkbox';
 
 
 import { MatSnackBarModule } from '@angular/material/snack-bar';
@@ -52,6 +53,8 @@ import { AddDeviceComponent } from './dash-component/add-device/add-device.compo
 import { PageLoadingComponent } from './dash-loading/page-loading/page-loading.component';
 
 import { DashFilterComponent } from './dash-component/dash-filter/dash-filter.component';
+import { AlertComponent } from './dash-pages/alert/alert.component';
+import { AlertEditComponent } from './dash-component/alert-edit/alert-edit.component';
 
 @NgModule({
   declarations: [
@@ -71,7 +74,9 @@ import { DashFilterComponent } from './dash-component/dash-filter/dash-filter.co
     AddDeviceComponent,
     PageLoadingComponent,
     AppMqttComponent,
-    DashFilterComponent
+    DashFilterComponent,
+    AlertComponent,
+    AlertEditComponent
   ],
   imports: [
     CommonModule,
@@ -103,7 +108,8 @@ import { DashFilterComponent } from './dash-component/dash-filter/dash-filter.co
     MatProgressSpinnerModule,
     MatTooltipModule,
     MatButtonToggleModule,
-    MatPaginatorModule
+    MatPaginatorModule,
+    MatCheckboxModule
   ],
   providers:[
     AuthService,

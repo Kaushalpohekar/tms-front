@@ -1,0 +1,134 @@
+<!-- <div class="container-fluid t ">
+<div class="card">
+<div class="card-body">
+<div class="d-flex align-items-center justify-content-between">
+<div class="flex-grow-1 user-head">
+<h4>Users</h4>
+</div>
+</div>
+<div class="table-container" style="overflow: auto; width: auto; max-height: calc(110vh - 10vh);">
+<table mat-table [dataSource]="dataSource" class="table">
+<ng-container matColumnDef="dname">
+<th mat-header-cell *matHeaderCellDef> Device Name </th>
+<td mat-cell *matCellDef="let element">{{element.DeviceName}} </td>
+</ng-container>
+<ng-container matColumnDef="DeviceUID">
+<th mat-header-cell *matHeaderCellDef>Device UID </th>
+<td mat-cell *matCellDef="let element">{{element.
+DeviceUID}} </td>
+</ng-container>
+<ng-container matColumnDef="threshold">
+<th mat-header-cell *matHeaderCellDef> Threshold </th>
+<td mat-cell *matCellDef="let element">{{element.TriggerValue}} </td>
+</ng-container>
+<ng-container matColumnDef="umail">
+<th mat-header-cell *matHeaderCellDef>User Mail </th>
+<td mat-cell *matCellDef="let element"> {{element.CompanyEmail}}</td>
+</ng-container>
+<ng-container matColumnDef="contact">
+<th mat-header-cell *matHeaderCellDef>User Phone </th>
+<td mat-cell *matCellDef="let element">{{element.ContactNO}} </td>
+</ng-container>
+<ng-container matColumnDef="interval">
+<th mat-header-cell *matHeaderCellDef> Interval </th>
+<td mat-cell *matCellDef="let element">{{element.interval}} </td>
+</ng-container>
+<ng-container matColumnDef="whatsapp">
+<th mat-header-cell *matHeaderCellDef class="text-center"> Whatsapp </th>
+<td mat-cell *matCellDef="let element">
+<mat-checkbox (change)="onCheckboxClick(element)" [checked]="element.whatsapp === 1" [disabled]="element.whatsapp === 0"> 
+{{ element.whatsapp === 1 ? 'Enabled' : 'Disabled' }}
+</mat-checkbox>
+</td> 
+</ng-container>                                       
+
+<ng-container matColumnDef="mail">
+<th mat-header-cell *matHeaderCellDef class="text-center"> Mail </th>
+<td mat-cell *matCellDef="let element">
+<mat-checkbox (change)="enable()">Enabled</mat-checkbox>
+</td>
+</ng-container>
+<ng-container matColumnDef="action">
+<th mat-header-cell *matHeaderCellDef class="text-center"> Action </th>
+<td mat-cell *matCellDef="let element" class="text-center">
+<button mat-button style="color: rgb(42, 165, 65);" (click)="openeditDialog(element)" mat-button>
+<mat-icon>edit</mat-icon>
+</button>
+<button mat-button style="color: red;" >
+<mat-icon>delete</mat-icon>
+</button>
+</td>
+</ng-container>
+<tr mat-header-row *matHeaderRowDef="displayedColumns">
+</tr>
+<tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>
+</div>
+</div>
+</div>
+</div> -->
+
+<div class="container-fluid alert">
+	<div class="row mb-2">
+		<div class="col-12 mb-2">
+			<mat-card>
+				<mat-card-content>
+					<div>Users</div>
+					<div class="table-container" style="overflow: auto; max-height:100%;">
+						<table mat-table [dataSource]="dataSource" class="">
+						  <ng-container matColumnDef="Device Name">
+		                    <th mat-header-cell *matHeaderCellDef>Device Name</th>
+		                    <td mat-cell *matCellDef="let element">{{ element.DeviceName }}</td>
+		                  </ng-container>
+		                  <ng-container matColumnDef="Device UID">
+		                    <th mat-header-cell *matHeaderCellDef>Device UID</th>
+		                    <td mat-cell *matCellDef="let element">{{ element.DeviceUID }}</td>
+		                  </ng-container>
+		                  <ng-container matColumnDef="Threshold">
+		                    <th mat-header-cell *matHeaderCellDef>Threshold</th>
+		                    <td mat-cell *matCellDef="let element">{{ element.TriggerValue }}</td>
+		                  </ng-container>
+		                  <ng-container matColumnDef="Email">
+		                    <th mat-header-cell *matHeaderCellDef>Email</th>
+		                    <td mat-cell *matCellDef="let element">{{ element.PersonalEmail }}</td>
+		                  </ng-container>
+		                  <ng-container matColumnDef="Contact No">
+		                    <th mat-header-cell *matHeaderCellDef>Email</th>
+		                    <td mat-cell *matCellDef="let element">{{ element.ContactNO}}</td>
+		                  </ng-container>
+		                  <ng-container matColumnDef="WhatsApp">
+		                    <th mat-header-cell *matHeaderCellDef>WhatsApp</th>
+		                    <td mat-cell *matCellDef="let element">
+		                    	<mat-checkbox [checked]="element.Whatsapp === '1'" (change)="onCheckboxWhatsAppClick(element)"> 
+                                {{ element.Whatsapp === '1' ? 'Enabled' : 'Disabled' }}
+                            	</mat-checkbox><!-- (change)="onCheckboxClick(element)" -->
+							</td>
+		                  </ng-container>
+		                  <ng-container matColumnDef="Mail">
+						    <th mat-header-cell *matHeaderCellDef>Mail</th>
+					        <td mat-cell *matCellDef="let element">
+					            <mat-checkbox [checked]="element.Mail === '1'" (change)="onCheckboxMailClick(element)"> 
+					                {{ element.Mail === '1' ? 'Enabled' : 'Disabled' }}
+					            </mat-checkbox><!-- (change)="onCheckboxClick(element)" -->
+					        </td>
+						  </ng-container>
+		                  <ng-container matColumnDef="Action">
+		                    <th mat-header-cell *matHeaderCellDef>Action</th>
+		                    <td mat-cell *matCellDef="let element">
+		                       <button mat-icon-button color="accent" aria-label="Edit" (click)="openeditDialog(element)">
+		                        <mat-icon>edit</mat-icon>
+		                      </button>
+		                      <button mat-icon-button color="warn" aria-label="Delete" (click)="deleteTrigger(element)">
+		                        <mat-icon>delete</mat-icon>
+		                      </button> 
+		                    </td>
+		                  </ng-container>
+						  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+						  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+						</table>
+					</div>
+				</mat-card-content>
+			</mat-card>
+		</div>
+	</div>
+</div>

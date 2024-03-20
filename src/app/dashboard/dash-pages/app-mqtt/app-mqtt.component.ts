@@ -45,6 +45,15 @@ export class AppMqttComponent implements OnInit {
 
   ngOnInit() {
     this.getUserDevices();
+    const device = sessionStorage.getItem('reportDevice') ?? '';
+    const startDate = sessionStorage.getItem('reportStartDate') ?? '';
+    const endDate = sessionStorage.getItem('reportEndDate') ?? '';
+      if (device && startDate && endDate) {
+      this.device_uid.setValue(device);
+      this.start_date.setValue(startDate);
+      this.end_date.setValue(endDate);
+      this.fetchData();
+    }
   }
   getUserDevices() {
     this.CompanyEmail = this.authService.getCompanyEmail();
@@ -154,6 +163,12 @@ export class AppMqttComponent implements OnInit {
 
       this.selectedDeviceUID = (this.device_uid.value as { DeviceUID?: string })?.DeviceUID;
       this.selectedDeviceType = (this.device_uid.value as { DeviceType?: string })?.DeviceType;
+      console.log(this.device_uid);
+      if(this.device_uid.value && this.start_date.value && this.end_date.value){
+        sessionStorage.setItem('reportStartDate', this.start_date.value) ;
+        sessionStorage.setItem('reportEndDate', this.end_date.value);
+        sessionStorage.setItem('reportDevice', this.device_uid.value);
+      }
 
       let dataWSPromise, dataPromise;
 
@@ -198,29 +213,10 @@ export class AppMqttComponent implements OnInit {
       const DeviceUID = entry.DeviceUID;
       const deviceOption = this.deviceOptions.find(device => device.DeviceUID === DeviceUID);
 
-      const timestamp = new Date(entry.bucket_start_time).getTime() + istOffset;
+      const timestamp = new Date(entry.bucket_start_time).getTime();
       const Temperature = entry.Temperature ? parseFloat(entry.Temperature).toFixed(1) : 'Offline';
       const Humidity = entry.Humidity ? parseFloat(entry.Humidity).toFixed(1) : 'Offline';
 
-      // Format the date as 'Jan 21, 2024, 5:30:00 AM'
-      // const formattedDate = new Date(timestamp).toLocaleString('en-US', {
-      //   month: 'short',
-      //   day: 'numeric',
-      //   year: 'numeric',
-      //   hour: 'numeric',
-      //   minute: 'numeric',
-      //   second: 'numeric',
-      //   hour12: true,
-      // });
-      // const formattedDate = new Date(timestamp).toLocaleString('en-US', {
-      //     year: 'numeric',
-      //     month: '2-digit',
-      //     day: '2-digit',
-      //     hour: '2-digit',
-      //     minute: '2-digit',
-      //     second: '2-digit',
-      //     hour12: true,
-      // });
       const formattedDate = new Date(timestamp).toISOString().replace(/T/, ' ').replace(/\..+/, '');
 
       return {
@@ -245,19 +241,9 @@ export class AppMqttComponent implements OnInit {
       const DeviceUID = entry.DeviceUID;
       const deviceOption = this.deviceOptions.find(device => device.DeviceUID === DeviceUID);
 
-      const timestamp = new Date(entry.bucket_start_time).getTime() + istOffset;
+      const timestamp = new Date(entry.bucket_start_time).getTime();
       const Temperature = entry.Temperature ? parseFloat(entry.Temperature).toFixed(1) : 'Offline';
 
-      // Format the date as 'Jan 21, 2024, 5:30:00 AM'
-      // const formattedDate = new Date(timestamp).toLocaleString('en-US', {
-      //     year: 'numeric',
-      //     month: '2-digit',
-      //     day: '2-digit',
-      //     hour: '2-digit',
-      //     minute: '2-digit',
-      //     second: '2-digit',
-      //     hour12: true,
-      // });
       const formattedDate = new Date(timestamp).toISOString().replace(/T/, ' ').replace(/\..+/, '');
 
       return {
@@ -281,21 +267,11 @@ export class AppMqttComponent implements OnInit {
       const DeviceUID = entry.DeviceUID;
       const deviceOption = this.deviceOptions.find(device => device.DeviceUID === DeviceUID);
 
-      const timestamp = new Date(entry.bucket_start_time).getTime() + istOffset;
+      const timestamp = new Date(entry.bucket_start_time).getTime();
       const TemperatureR = entry.TemperatureR ? parseFloat(entry.TemperatureR).toFixed(1) : 'Offline';
       const TemperatureY = entry.TemperatureY ? parseFloat(entry.TemperatureY).toFixed(1) : 'Offline';
       const TemperatureB = entry.TemperatureB ? parseFloat(entry.TemperatureB).toFixed(1) : 'Offline';
 
-      // Format the date as 'Jan 21, 2024, 5:30:00 AM'
-      // const formattedDate = new Date(timestamp).toLocaleString('en-US', {
-      //     year: 'numeric',
-      //     month: '2-digit',
-      //     day: '2-digit',
-      //     hour: '2-digit',
-      //     minute: '2-digit',
-      //     second: '2-digit',
-      //     hour12: true,
-      // });
       const formattedDate = new Date(timestamp).toISOString().replace(/T/, ' ').replace(/\..+/, '');
 
       return {
@@ -351,19 +327,9 @@ processChartDataWSFS(response: any) {
     const DeviceUID = entry.DeviceUID;
     const deviceOption = this.deviceOptions.find(device => device.DeviceUID === DeviceUID);
 
-    const timestamp = new Date(entry.bucket_start_time).getTime() + istOffset;
+    const timestamp = new Date(entry.bucket_start_time).getTime();
     const flowRate = entry.flowRate ? parseFloat(entry.flowRate).toFixed(1) : 'Offline';
 
-    // Format the date as 'Jan 21, 2024, 5:30:00 AM'
-    // const formattedDate = new Date(timestamp).toLocaleString('en-US', {
-    //     year: 'numeric',
-    //     month: '2-digit',
-    //     day: '2-digit',
-    //     hour: '2-digit',
-    //     minute: '2-digit',
-    //     second: '2-digit',
-    //     hour12: true,
-    // });
     const formattedDate = new Date(timestamp).toISOString().replace(/T/, ' ').replace(/\..+/, '');
 
     return {
