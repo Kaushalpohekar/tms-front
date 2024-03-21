@@ -80,14 +80,14 @@ export class AlertEditComponent {
 
       this.DashDataService.updateTrigger(DeviceUID, TriggerData).subscribe(
         () => {
-          this.snackBar.open('User added Successfully!', 'Dismiss', {
+          this.snackBar.open('User updated Successfully!', 'Dismiss', {
             duration: 2000
           });
           this.dialogRef.close();
         },
         (error) => {
           this.snackBar.open(
-            error.errorMessage || 'Failed to add user, Please try Again!',
+            error.errorMessage || 'Failed to rdit user, Please try Again!',
             'Dismiss',
             { duration: 2000 }
           );
