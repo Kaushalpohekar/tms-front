@@ -8,17 +8,17 @@
 	  <div class="col-md-6 mb-2">
 		<mat-form-field class="from-field">
 		  <mat-label>Device Name</mat-label>
-		  <input matInput [formControl]="DeviceName" required>
+		  <input matInput [formControl]="DeviceName" >
 		  <mat-error *ngIf="DeviceName.invalid">Device Name is Required.</mat-error>
 		</mat-form-field>
 	  </div>
 	  <div class="col-md-6 mb-2">
 		<mat-form-field class="from-field">
 		  <mat-label>Device UID</mat-label>
-		  <input matInput [formControl]="DeviceUID" required>
+		  <input matInput [formControl]="DeviceUID">
 		  <mat-error *ngIf="DeviceUID.invalid">Device UID is required</mat-error>
 		</mat-form-field>
-	  </div>
+	  </div>	  
 	  <div class="col-md-6 mb-2">
 		<mat-form-field class="from-field">
 		  <mat-label>Threshold</mat-label>
@@ -29,9 +29,9 @@
 	  <div class="col-md-6 mb-2">
 		<mat-form-field class="from-field">
 		  <mat-label>User Mail</mat-label>
-		  <input matInput [formControl]="PersonalEmail" required>
+		  <input matInput [formControl]="PersonalEmail" required >
 		  <mat-error *ngIf="PersonalEmail.invalid">Mail is Required.</mat-error>
-		</mat-form-field>
+		</mat-form-field >
 	  </div>
 	  <div class="col-md-6 mb-2">
 		<mat-form-field class="from-field">

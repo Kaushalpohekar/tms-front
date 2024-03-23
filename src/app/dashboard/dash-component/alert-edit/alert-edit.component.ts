@@ -12,8 +12,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 export class AlertEditComponent {
   device: any;
   errorMessage = '';
-  DeviceName = new FormControl('', [Validators.required]);
-  DeviceUID = new FormControl('', [Validators.required]);
+  DeviceName =new FormControl({value: '', disabled: true});
+  DeviceUID = new FormControl({value: '', disabled: true});
   TriggerValue = new FormControl('', [Validators.required]);
   PersonalEmail = new FormControl('', [Validators.required]);
   ContactNO = new FormControl('', [Validators.required]);
@@ -60,8 +60,8 @@ export class AlertEditComponent {
 
   onSaveClick() {
     if (
-      this.DeviceName.valid &&
-      this.DeviceUID.valid &&
+      // this.DeviceName.valid &&
+      // this.DeviceUID.valid &&
       this.TriggerValue.valid &&
       this.PersonalEmail.valid &&
       this.ContactNO.valid
