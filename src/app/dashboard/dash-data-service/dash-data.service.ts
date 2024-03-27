@@ -202,4 +202,12 @@ export class DashDataService {
   UpdateMail(DeviceUID: string, Mail:any) :Observable<any> {
     return this.http.put(`${this.API_URL}/UpdateMail/${DeviceUID}`, Mail);
   }
+
+  editDeviceFromSetting(deviceId: string, DeviceData:any):Observable<any> {
+    return this.http.put(`${this.API_URL}/editDeviceFromSetting/${deviceId}`, DeviceData);
+  }
+
+  editUser(userId: string, userUpdate:any): Observable<any>{
+    return this.http.put(`${this.API_URL}/edit-User/${userId}`, userUpdate);
+  }
 }

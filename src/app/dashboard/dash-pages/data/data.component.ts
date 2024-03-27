@@ -266,7 +266,7 @@ export class DataComponent implements OnInit, OnDestroy {
     Highcharts.chart('curvedLineChart', {
       chart: {
         type: 'spline',
-        //zoomType: 'xy',
+        zoomType: 'xy',
         //allowZoomOut: true,
       },
       title: {

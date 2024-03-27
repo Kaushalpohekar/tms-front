@@ -55,6 +55,8 @@ import { PageLoadingComponent } from './dash-loading/page-loading/page-loading.c
 import { DashFilterComponent } from './dash-component/dash-filter/dash-filter.component';
 import { AlertComponent } from './dash-pages/alert/alert.component';
 import { AlertEditComponent } from './dash-component/alert-edit/alert-edit.component';
+import { EditDeviceFromSettingComponent } from './dash-component/edit-device-from-setting/edit-device-from-setting.component';
+import { EditUserComponent } from './dash-component/edit-user/edit-user.component';
 
 @NgModule({
   declarations: [
@@ -76,7 +78,9 @@ import { AlertEditComponent } from './dash-component/alert-edit/alert-edit.compo
     AppMqttComponent,
     DashFilterComponent,
     AlertComponent,
-    AlertEditComponent
+    AlertEditComponent,
+    EditDeviceFromSettingComponent,
+    EditUserComponent
   ],
   imports: [
     CommonModule,

@@ -1,0 +1,88 @@
+<div class="container-fluid">
+    <div class="row model-head mb-2">
+        <div class="col-lg-12 col-md-12 col-sm-12 pt-1">
+            <div class="model-title">Edit Device</div>
+        </div>
+    </div>
+    <div class="row">
+        <!-- Assuming you have a device object in your component with the existing device details -->
+        <div class="col-md-12 mb-2">
+            <mat-form-field class="from-field">
+                <mat-label>Device Name</mat-label>
+                <input matInput [formControl]="DeviceName" required>
+                <mat-error *ngIf="DeviceName.invalid">{{getDevicenameError()}}</mat-error>
+            </mat-form-field>
+        </div>
+        <!-- <div class="col-md-6 mb-2">
+            <mat-form-field class="from-field">
+                <mat-label>Device Trigger</mat-label>
+                <input matInput placeholder="35" [formControl]="TriggerValue" required>
+                <mat-error *ngIf="TriggerValue.invalid">Trigger is Required.</mat-error>
+            </mat-form-field>
+        </div> -->
+        <div class="col-md-6 mb-2">
+            <mat-form-field class="from-field">
+                <mat-label>Device Id</mat-label>
+                <input matInput [(ngModel)]="device.DeviceUID" disabled>
+            </mat-form-field>
+        </div>
+        <div class="col-md-6 mb-2">
+            <mat-form-field class="from-field">
+                <mat-label>Device Location</mat-label>
+                <input matInput [formControl]="DeviceLocation" [(ngModel)]="device.DeviceLocation" required>
+                <mat-error *ngIf="DeviceLocation.invalid">Location is Required.</mat-error>
+            </mat-form-field>
+        </div>
+        <div class="col-md-8  mb-2">
+            <mat-form-field class="from-field">
+                <mat-label>Device Type</mat-label>
+                <mat-select [formControl]="DeviceType">
+                    <mat-option value="t">Temperature</mat-option>
+                    <mat-option value="th">Temperature - TH</mat-option>
+                    <mat-option value="ryb">Temperature - RYB</mat-option>
+                    <mat-option value="ws">Water Flow Sensor</mat-option>
+                    <mat-option value="fs">Flow Sensor</mat-option>
+                    <mat-option value="fs">Flow Sensor</mat-option>
+                    <mat-option value="ps">Pressure Sensor</mat-option>
+                </mat-select>
+                <mat-error *ngIf="DeviceType.invalid">Device Type is Required.</mat-error>
+            </mat-form-field>
+        </div>
+        <div class="col-md-4 mb-2">
+            <mat-form-field class="from-field">
+              <mat-label>Units</mat-label>
+              <mat-select [formControl]="DeviceUnits">
+                <ng-container *ngIf="DeviceType.value === 't'">
+                  <mat-option value="degC">°C</mat-option>
+                  <mat-option value="degF">°F</mat-option>
+                </ng-container>
+                <ng-container *ngIf="DeviceType.value === 'h'">
+                  <mat-option value="%">%</mat-option>
+                </ng-container>
+                <ng-container *ngIf="DeviceType.value === 'th'">
+                  <mat-option value="degC">°C</mat-option>
+                  <mat-option value="degF">°F</mat-option>
+                </ng-container>
+                <ng-container *ngIf="DeviceType.value === 'ryb'">
+                  <mat-option value="degC">°C</mat-option>
+                  <mat-option value="degF">°F</mat-option>
+                </ng-container>
+                <ng-container *ngIf="DeviceType.value === 'ws'">
+                  <mat-option value="m/s">m/s</mat-option>
+                  <mat-option value="g/m">g/m</mat-option>
+                </ng-container>
+                <ng-container *ngIf="DeviceType.value === 'ps'">
+                  <mat-option value="pa">pa</mat-option>
+                </ng-container>
+              </mat-select>
+              <mat-error *ngIf="DeviceUnits.invalid">Unit is required.</mat-error>
+            </mat-form-field>
+          </div>
+        <div class="col-6 justify-content-end d-flex mb-2">
+            <button mat-raised-button (click)="onNoClick()">Close</button>
+        </div>
+        <div class="col-6 mb-2">
+            <button mat-raised-button color="primary" (click)="editDevice()">Update</button>
+        </div>
+    </div>
+</div>
