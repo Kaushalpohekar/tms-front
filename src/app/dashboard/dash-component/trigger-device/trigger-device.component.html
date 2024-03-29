@@ -20,16 +20,46 @@
     <div class="col-md-6 col-sm-8 mb-2">
       <mat-form-field class="from-field">
         <mat-label>Device name</mat-label>
-        <input matInput [(ngModel)]="device.DeviceUID" disabled>
+        <input matInput [(ngModel)]="deviceName" [formControl]="DeviceName" readonly>
       </mat-form-field>
     </div>
     <div class="col-md-6 col-sm-4 mb-2">
       <mat-form-field class="from-field">
         <mat-label>Threshold</mat-label>
-        <input matInput placeholder="35" [formControl]="TriggerValue" required>
+        <input matInput [(ngModel)]="device.Threshold" [formControl]="TriggerValue" required>
         <mat-error *ngIf="TriggerValue.invalid">{{getThresholdErrorMessage()}}</mat-error>
       </mat-form-field>
     </div>
+    <!-- <div class="col-md-6 col-sm-4 mb-2">
+      <mat-form-field class="from-field">
+        <mat-label>Email</mat-label>
+        <input matInput placeholder="Enter your email" [formControl]="EmailValue" required>
+        <mat-error *ngIf="TriggerValue.invalid">{{getEmailErrorMessage()}}</mat-error>
+      </mat-form-field>
+    </div> -->
+    <div class="col-md-6 mb-2">
+      <mat-form-field class="from-field">
+        <mat-label>User Mail</mat-label>
+        <input matInput [(ngModel)]="device.CompanyEmail" [formControl]="PersonalEmail" required >
+        <mat-error *ngIf="PersonalEmail.invalid">Mail is Required.</mat-error>
+      </mat-form-field >
+    </div>
+    <div class="col-md-6 mb-2">
+      <mat-form-field class="from-field">
+        <mat-label>User Phone</mat-label>
+        <input matInput [formControl]="ContactNO" required>
+        <mat-error *ngIf="ContactNO.invalid">Phone No. is Required.</mat-error>
+      </mat-form-field>
+      </div>
+      <div class="col-md-6 mb-2">
+      <mat-form-field class="from-field">
+        <mat-label>Interval</mat-label>
+        <input matInput [formControl]="interval" required>
+        <mat-error *ngIf="interval.invalid">Interval is Required.</mat-error>
+      </mat-form-field>
+      </div>
+    </div>
+  <div class="row">
     <div class="col-md-6 justify-content-end d-flex mb-2">
       <button mat-raised-button (click)="onNoClick()">Close</button>
     </div>

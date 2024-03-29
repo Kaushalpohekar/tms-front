@@ -7,6 +7,9 @@ import { Router } from '@angular/router';
   providedIn: 'root'
 })
 export class AuthService {
+  getPersonalEmail(): import("@angular/forms").FormControl<string | null> {
+    throw new Error('Method not implemented.');
+  }
   private userType!: string;
   private CompanyEmail!: string;
   private token!: string;
