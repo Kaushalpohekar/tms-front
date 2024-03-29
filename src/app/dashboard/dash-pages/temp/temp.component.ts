@@ -53,70 +53,81 @@ export class TempComponent implements OnInit {
     return this.authService.getUserType();
   }
 
-  getUserDevices() {
-    this.CompanyEmail = this.authService.getCompanyEmail();
-    if (this.CompanyEmail) {
-      this.dashDataService.userDevices(this.CompanyEmail).pipe(
-        takeUntil(this.destroy$)
-      ).subscribe(
-        (devices: any) => {
-          this.userDevices = devices.devices;
-          this.getDeviceData();
+  // getUserDevices() {
+  //   this.CompanyEmail = this.authService.getCompanyEmail();
+  //   if (this.CompanyEmail) {
+  //     this.dashDataService.userDevices(this.CompanyEmail).pipe(
+  //       takeUntil(this.destroy$)
+  //     ).subscribe(
+  //       (devices: any) => {
+  //         this.userDevices = devices.devices;
+  //         this.getDeviceData();
 
-          interval(60 * 1000).pipe(
-            takeUntil(this.destroy$)
-          ).subscribe(() => {
-            this.getDeviceData();
-            this.CombinedConsumption();
-          });
-        },
-        (error) => {
-          this.snackBar.open('Error while fetching user devices!', 'Dismiss', {
-            duration: 2000
+  //         interval(60 * 1000).pipe(
+  //           takeUntil(this.destroy$)
+  //         ).subscribe(() => {
+  //           this.getDeviceData();
+  //           this.CombinedConsumption();
+  //         });
+  //       },
+  //       (error) => {
+  //         this.snackBar.open('Error while fetching user devices!', 'Dismiss', {
+  //           duration: 2000
+  //         });
+  //       }
+  //     );
+  //   } 
+  // }
+getUserDevices() {
+  this.CompanyEmail = this.authService.getCompanyEmail();
+  if (this.CompanyEmail) {
+    this.dashDataService.userDevices(this.CompanyEmail).subscribe(
+      (devices: any) => {
+        this.userDevices = devices.devices;
+        let sortOption = sessionStorage.getItem('selectedSortOption');
+        if (!sortOption) {
+          sortOption = 'DeviceName A-Z';
+        }
+
+        if (sortOption === 'DeviceName A-Z') {
+          this.userDevices.sort((a, b) => a.DeviceName.localeCompare(b.DeviceName));
+        } else if (sortOption === 'DeviceName Z-A') {
+          this.userDevices.sort((b, a) => a.DeviceName.localeCompare(b.DeviceName));
+        } else if (sortOption === 'DeviceUID A-Z') {
+          this.userDevices.sort((a, b) => a.DeviceUID.localeCompare(b.DeviceUID));
+        } else if (sortOption === 'DeviceUID Z-A') {
+          this.userDevices.sort((b, a) => a.DeviceUID.localeCompare(b.DeviceUID));
+        } else if (sortOption === 'DeviceStatus offline') {
+          // this.userDevices.sort((a, b) => a.status.localeCompare(b.status));
+          this.userDevices.sort((a, b) => {
+            // Compare by status
+            if (a.status === 'offline' && b.status !== 'offline') {
+              return -1; // Put 'offline' status first
+            } else if (a.status !== 'offline' && b.status === 'offline') {
+              return 1; // Put 'offline' status first
+            } else {
+              // If statuses are the same or both not 'offline', sort by DeviceName
+              return a.DeviceName.localeCompare(b.DeviceName);
+            }
           });
         }
-      );
-    } 
+
+        this.getDeviceData();
+        console.log(this.userDevices);
+
+        interval(60 * 1000).subscribe(() => {
+          this.getDeviceData();
+          this.CombinedConsumption();
+        });
+      },
+      (error) => {
+        this.snackBar.open('Error while fetching user devices!', 'Dismiss', {
+          duration: 2000
+        });
+      }
+    );
   }
-// getUserDevices() {
-//   this.CompanyEmail = this.authService.getCompanyEmail();
-//   if (this.CompanyEmail) {
-//     this.dashDataService.userDevices(this.CompanyEmail).subscribe(
-//       (devices: any) => {
-//         this.userDevices = devices.devices;
-//         let sortOption = sessionStorage.getItem('selectedSortOption');
-//         if (!sortOption) {
-//           sortOption = 'DeviceName A-Z';
-//         }
-
-//         if (sortOption === 'DeviceName A-Z') {
-//           this.userDevices.sort((a, b) => a.DeviceName.localeCompare(b.DeviceName));
-//         } else if (sortOption === 'DeviceName Z-A') {
-//           this.userDevices.sort((b, a) => a.DeviceName.localeCompare(b.DeviceName));
-//         } else if (sortOption === 'DeviceUID A-Z') {
-//           this.userDevices.sort((a, b) => a.DeviceUID.localeCompare(b.DeviceUID));
-//         } else if (sortOption === 'DeviceUID Z-A') {
-//           this.userDevices.sort((b, a) => a.DeviceUID.localeCompare(b.DeviceUID));
-//         } else if (sortOption === 'DeviceStatus offline') {
-//           this.userDevices.sort((a, b) => a.status.localeCompare(b.status));
-//         }
-
-//         this.getDeviceData();
-//         console.log(this.userDevices);
-
-//         interval(60 * 1000).subscribe(() => {
-//           this.getDeviceData();
-//           this.CombinedConsumption();
-//         });
-//       },
-//       (error) => {
-//         this.snackBar.open('Error while fetching user devices!', 'Dismiss', {
-//           duration: 2000
-//         });
-//       }
-//     );
-//   }
-// }
+}
 
 
   getUserDevicesTrigger() {
@@ -157,19 +168,38 @@ export class TempComponent implements OnInit {
     });
   }
 
+  // getDeviceData(){
+  //   if(this.CompanyEmail){
+  //     this.dashDataService.getDeviceData(this.CompanyEmail).subscribe(
+  //       (deviceData) =>{
+  //         this.deviceData = this.transformData(deviceData);
+  //         this.dashService.isPageLoading(false);
+  //       },
+  //       (error) =>{
+  //         console.log("Error");
+  //       }
+  //     );
+  //   }
+  // }
   getDeviceData(){
-    if(this.CompanyEmail){
-      this.dashDataService.getDeviceData(this.CompanyEmail).subscribe(
-        (deviceData) =>{
-          this.deviceData = this.transformData(deviceData);
-          this.dashService.isPageLoading(false);
-        },
-        (error) =>{
-          console.log("Error");
-        }
-      );
-    }
+  if(this.CompanyEmail){
+    this.dashDataService.getDeviceData(this.CompanyEmail).subscribe(
+      (deviceData) =>{
+        const transformedData = this.transformData(deviceData);
+        // Map deviceData to userDevices based on DeviceUID index
+        this.deviceData = this.userDevices.map(userDevice => {
+          const foundData = transformedData.find(data => data.DeviceUID === userDevice.DeviceUID);
+          return foundData || null; // Return null if no matching data found
+        });
+        this.dashService.isPageLoading(false);
+      },
+      (error) =>{
+        console.log("Error");
+      }
+    );
   }
+}
+
 
   transformData(data: any): any[] {
     const transformedData: any[] = [];
@@ -373,6 +403,7 @@ export class TempComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((result) => {
       this.getUserDevices();
+      this.dashService.isPageLoading(true);
     });
   }
 }
