@@ -95,7 +95,7 @@ export class AddUserComponent implements OnInit{
     }
   }
 
-  companyDetails(){
+ companyDetails() {
     this.userId = sessionStorage.getItem('UserId');
     if(this.userId){
       this.DashDataService.userDetails(this.userId).subscribe(

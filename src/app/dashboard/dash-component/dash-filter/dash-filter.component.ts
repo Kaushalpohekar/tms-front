@@ -22,7 +22,7 @@ export class DashFilterComponent {
   deviceOptions: any[] = [];
   selectedRadioButton!: string;
   currentDate: Date = new Date();
-  startDate!: Date;
+  startDate!: Date; 
   endDate: Date = this.currentDate;
   start_date = new FormControl('', [Validators.required]);
   end_date = new FormControl('', [Validators.required]);
