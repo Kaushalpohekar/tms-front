@@ -55,6 +55,7 @@ export class AppMqttComponent implements OnInit {
       this.fetchData();
     }
   }
+  
   getUserDevices() {
     this.CompanyEmail = this.authService.getCompanyEmail();
     if (this.CompanyEmail) {
@@ -289,88 +290,88 @@ export class AppMqttComponent implements OnInit {
     console.log(this.dataSource);
   }
 
-mergeChartData(responseWSFS: any, responseWSFSTotal: any) {
-  const processedDataWSFS = this.processChartDataWSFS(responseWSFS);
-  const processedDataWSFSTotal = this.processChartDataWSFSTotal(responseWSFSTotal);
+  mergeChartData(responseWSFS: any, responseWSFSTotal: any) {
+    const processedDataWSFS = this.processChartDataWSFS(responseWSFS);
+    const processedDataWSFSTotal = this.processChartDataWSFSTotal(responseWSFSTotal);
 
-  // Create an object to store aggregated totalVolume for each date
-  const totalVolumeMap: { [date: string]: number } = {};
+    // Create an object to store aggregated totalVolume for each date
+    const totalVolumeMap: { [date: string]: number } = {};
 
-  // Aggregate totalVolume values for each date from processedDataWSFSTotal
-  processedDataWSFSTotal.forEach((wsfstotalEntry: any) => {
-    const key = wsfstotalEntry.Date;
-    totalVolumeMap[key] = (totalVolumeMap[key] || 0) + parseFloat(wsfstotalEntry.totalVolume);
-  });
-
-  // Merge the data from processedDataWSFS and add aggregated totalVolume
-  const mergedData = processedDataWSFS.map((wsfsEntry: any) => {
-    const key = wsfsEntry.Date;
-    const aggregatedTotalVolume = totalVolumeMap[key];
-    
-    return {
-      ...wsfsEntry,
-      totalVolume: aggregatedTotalVolume || 'N/A'
-    };
-  });
-
-  this.dataSource.data = mergedData;
-  this.dataSource.paginator = this.paginator;
-  console.log(this.dataSource);
-}
-
-
-processChartDataWSFS(response: any) {
-  const data = response.data;
-  const istOffset = 5.5 * 60 * 60 * 1000;
-
-  return data.map((entry: any) => {
-    const DeviceUID = entry.DeviceUID;
-    const deviceOption = this.deviceOptions.find(device => device.DeviceUID === DeviceUID);
-
-    const timestamp = new Date(entry.bucket_start_time).getTime();
-    const flowRate = entry.flowRate ? parseFloat(entry.flowRate).toFixed(1) : 'Offline';
-
-    const formattedDate = new Date(timestamp).toISOString().replace(/T/, ' ').replace(/\..+/, '');
-
-    return {
-      DeviceName: deviceOption ? deviceOption.DeviceName : '',
-      DeviceUID: DeviceUID,
-      Date: formattedDate,
-      flowRate: flowRate
-    };
-  });
-}
-
-processChartDataWSFSTotal(response: any) {
-  const data = response.data;
-  const istOffset = 5.5 * 60 * 60 * 1000;
-
-  return data.map((entry: any) => {
-    const DeviceUID = entry.DeviceUID;
-    const deviceOption = this.deviceOptions.find(device => device.DeviceUID === DeviceUID);
-
-    const timestamp = new Date(entry.TimeStamp);
-    const totalVolume = entry.totalVolume ? parseFloat(entry.totalVolume).toFixed(1) : 'Offline';
-
-    // Format the date as 'Jan 21, 2024, 5:30:00 AM'
-    const formattedDate = new Date(timestamp).toLocaleString('en-US', {
-      month: 'short',
-      day: 'numeric',
-      year: 'numeric',
-      hour: 'numeric',
-      minute: 'numeric',
-      second: 'numeric',
-      hour12: true,
+    // Aggregate totalVolume values for each date from processedDataWSFSTotal
+    processedDataWSFSTotal.forEach((wsfstotalEntry: any) => {
+      const key = wsfstotalEntry.Date;
+      totalVolumeMap[key] = (totalVolumeMap[key] || 0) + parseFloat(wsfstotalEntry.totalVolume);
     });
 
-    return {
-      DeviceName: deviceOption ? deviceOption.DeviceName : '',
-      DeviceUID: DeviceUID,
-      Date: formattedDate,
-      totalVolume: totalVolume
-    };
-  });
-}
+    // Merge the data from processedDataWSFS and add aggregated totalVolume
+    const mergedData = processedDataWSFS.map((wsfsEntry: any) => {
+      const key = wsfsEntry.Date;
+      const aggregatedTotalVolume = totalVolumeMap[key];
+      
+      return {
+        ...wsfsEntry,
+        totalVolume: aggregatedTotalVolume || 'N/A'
+      };
+    });
+
+    this.dataSource.data = mergedData;
+    this.dataSource.paginator = this.paginator;
+    console.log(this.dataSource);
+  }
+
+
+  processChartDataWSFS(response: any) {
+    const data = response.data;
+    const istOffset = 5.5 * 60 * 60 * 1000;
+
+    return data.map((entry: any) => {
+      const DeviceUID = entry.DeviceUID;
+      const deviceOption = this.deviceOptions.find(device => device.DeviceUID === DeviceUID);
+
+      const timestamp = new Date(entry.bucket_start_time).getTime();
+      const flowRate = entry.flowRate ? parseFloat(entry.flowRate).toFixed(1) : 'Offline';
+
+      const formattedDate = new Date(timestamp).toISOString().replace(/T/, ' ').replace(/\..+/, '');
+
+      return {
+        DeviceName: deviceOption ? deviceOption.DeviceName : '',
+        DeviceUID: DeviceUID,
+        Date: formattedDate,
+        flowRate: flowRate
+      };
+    });
+  }
+
+  processChartDataWSFSTotal(response: any) {
+    const data = response.data;
+    const istOffset = 5.5 * 60 * 60 * 1000;
+
+    return data.map((entry: any) => {
+      const DeviceUID = entry.DeviceUID;
+      const deviceOption = this.deviceOptions.find(device => device.DeviceUID === DeviceUID);
+
+      const timestamp = new Date(entry.TimeStamp);
+      const totalVolume = entry.totalVolume ? parseFloat(entry.totalVolume).toFixed(1) : 'Offline';
+
+      // Format the date as 'Jan 21, 2024, 5:30:00 AM'
+      const formattedDate = new Date(timestamp).toLocaleString('en-US', {
+        month: 'short',
+        day: 'numeric',
+        year: 'numeric',
+        hour: 'numeric',
+        minute: 'numeric',
+        second: 'numeric',
+        hour12: true,
+      });
+
+      return {
+        DeviceName: deviceOption ? deviceOption.DeviceName : '',
+        DeviceUID: DeviceUID,
+        Date: formattedDate,
+        totalVolume: totalVolume
+      };
+    });
+  }
 
 
 

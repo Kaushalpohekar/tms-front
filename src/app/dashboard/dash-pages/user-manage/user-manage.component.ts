@@ -5,6 +5,8 @@ import { AuthService } from '../../../login/auth/auth.service';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { AddUserComponent } from '../../dash-component/add-user/add-user.component';
 import { AddDeviceComponent } from '../../dash-component/add-device/add-device.component';
+import { EditDeviceFromSettingComponent } from '../../dash-component/edit-device-from-setting/edit-device-from-setting.component';
+import { EditUserComponent } from '../../dash-component/edit-user/edit-user.component';
 import { interval, Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { DashService } from '../../dash.service';
@@ -141,15 +143,27 @@ export class UserManageComponent implements OnInit, OnDestroy {
     dialogRef.afterClosed().subscribe(deviceAdded => {});
   }
 
-  editUser(user: UserData): void {
-    // Implement your edit logic here
-    console.log('Editing user');
+  editUser(userData:any): void {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.width = '500px';
+    dialogConfig.height = 'auto';
+    dialogConfig.maxWidth = '90vw';
+    dialogConfig.data = {
+      data: userData
+    };
+    const dialogRef = this.dialog.open(EditUserComponent, dialogConfig);
+    dialogRef.afterClosed().subscribe(userUpdate => {});
   }
 
   // Function to delete a user
   editDevice(device: DeviceData): void {
-    // Implement your edit logic here
-    console.log('Editing Device');
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.width = '500px';
+    dialogConfig.height = 'auto';
+    dialogConfig.maxWidth = '90vw';
+    dialogConfig.data = { device };
+    const dialogRef = this.dialog.open(EditDeviceFromSettingComponent, dialogConfig);
+    dialogRef.afterClosed().subscribe(updatedDevice => {});
   }
 
   deleteDevice(device: DeviceData) {

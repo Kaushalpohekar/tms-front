@@ -158,7 +158,7 @@ export class DataComponent implements OnInit, OnDestroy {
     try {
       this.fetchDeviceInfo(this.deviceID);
       let dataWSPromise, dataPromise;
-      if (this.DeviceType === 'ws' || this.DeviceType === 'fs') {
+      if (this.DeviceType === 'ws' || this.DeviceType === 'fs' || this.DeviceType === 'ts') {
         if (this.deviceINTERVAL === 'Custom') {
           dataWSPromise = this.DashDataService.getCustomConsumption(this.deviceID, this.deviceSTART, this.deviceEND).pipe(takeUntil(this.destroy$)).toPromise();
         } else {
@@ -266,7 +266,7 @@ export class DataComponent implements OnInit, OnDestroy {
     Highcharts.chart('curvedLineChart', {
       chart: {
         type: 'spline',
-        //zoomType: 'xy',
+        zoomType: 'xy',
         //allowZoomOut: true,
       },
       title: {
@@ -612,6 +612,10 @@ export class DataComponent implements OnInit, OnDestroy {
         this.createChart3();
         this.createBarGraph();
         break;
+      case 'ts':
+        this.createChart3();
+        this.createBarGraph();
+        break;
       case 'ps':
         this.createChart4();
         break;
@@ -656,7 +660,7 @@ export class DataComponent implements OnInit, OnDestroy {
 
           this.DeviceTrigger = deviceTriggerResult[0].TriggerValue;
 
-          if (this.DeviceType === 'ws' || this.DeviceType === 'fs') {
+          if (this.DeviceType === 'ws' || this.DeviceType === 'fs' || this.DeviceType === 'ts') {
             this.DashDataService.getTotalConsumpion(deviceId)
               .pipe(takeUntil(this.destroy$))
               .subscribe(

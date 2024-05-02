@@ -43,7 +43,7 @@ export class NavbarComponent {
   }
 
   notifications(){
-    this.router.navigate(['/dash/notification']);
+    this.router.navigate(['/dash/alert']);
   }
 
   settings(){

@@ -21,7 +21,7 @@ export interface TriggerData {
   styleUrls: ['./alert.component.css']
 })
 export class AlertComponent implements OnInit {
-  displayedColumns: string[] = ['Device Name', 'Device UID', 'Threshold', 'Email', 'Contact No', 'WhatsApp', 'Mail', 'Action'];
+  displayedColumns: string[] = ['Device Name', 'Device UID', 'Threshold', 'CompanyEmail', 'Contact No', 'WhatsApp', 'Mail', 'Action'];
   dataSource: TriggerData[] = [];
 
   constructor(public dialog: MatDialog, private DashDataService: DashDataService) {}
@@ -105,7 +105,7 @@ export class AlertComponent implements OnInit {
 
   deleteTrigger(element: any) {
     const deviceid = element.DeviceUID;
-
+      
     Swal.fire({
       title: "Are you sure?",
       text: "You won't be able to revert this!",

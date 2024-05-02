@@ -62,7 +62,7 @@ export class DashDataService {
   }
 
   //private readonly API_URL = 'https://tms.senselive.in:3000';
-  private readonly API_URL = 'http://localhost:3000';
+  private readonly API_URL = 'http://localhost:3000/api';
 
   userDevices(CompanyEmail: string): Observable<any> {
     return this.http.get(`${this.API_URL}/userdevices/${CompanyEmail}`);
@@ -202,5 +202,13 @@ export class DashDataService {
 
   UpdateMail(DeviceUID: string, Mail:any) :Observable<any> {
     return this.http.put(`${this.API_URL}/UpdateMail/${DeviceUID}`, Mail);
+  }
+
+  editDeviceFromSetting(deviceId: string, DeviceData:any):Observable<any> {
+    return this.http.put(`${this.API_URL}/editDeviceFromSetting/${deviceId}`, DeviceData);
+  }
+
+  editUser(userId: string, userUpdate:any): Observable<any>{
+    return this.http.put(`${this.API_URL}/edit-User/${userId}`, userUpdate);
   }
 }

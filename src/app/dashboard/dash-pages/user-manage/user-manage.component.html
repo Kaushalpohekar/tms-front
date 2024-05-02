@@ -175,15 +175,13 @@
                     </td>
                   </ng-container>
              
-
-            
-
                   <!-- <ng-container matColumnDef="DeviceType">
                     <th mat-header-cell *matHeaderCellDef>Device Type</th>
                     <td mat-cell *matCellDef="let element">
                       {{ element.DeviceType === 'ryb' ? 'RYB' : (element.DeviceType === 'th' ? 'TH' : 'Temperature') }}
                     </td>
-                  </ng-container> -->
+                  </ng-container> -->  
+                  
                   <ng-container matColumnDef="DeviceType">
                     <th mat-header-cell *matHeaderCellDef>Device Type</th>
                     <td mat-cell *matCellDef="let element">
@@ -192,6 +190,8 @@
                           ? 'RYB'
                           : element.DeviceType === 'th'
                           ? 'TH'
+                          : element.DeviceType === 'ts'
+                          ? 'Totalizer'
                           : element.DeviceType === 'ws'
                           ? 'Water Sensor'
                           : element.DeviceType === 'ps'

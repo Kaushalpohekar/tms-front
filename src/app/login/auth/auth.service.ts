@@ -7,6 +7,9 @@ import { Router } from '@angular/router';
   providedIn: 'root'
 })
 export class AuthService {
+  getPersonalEmail(): import("@angular/forms").FormControl<string | null> {
+    throw new Error('Method not implemented.');
+  }
   private userType!: string;
   private CompanyEmail!: string;
   private token!: string;
@@ -16,8 +19,8 @@ export class AuthService {
 
   constructor(private http: HttpClient, private router: Router) {}
 
-  private readonly API_URL = 'https://tms.senselive.in:3000';
-  //private readonly API_URL = 'http://localhost:3000';
+  //private readonly API_URL = 'https://tms.senselive.in:3000';
+  private readonly API_URL = 'http://localhost:3000/api';
 
   login(loginData: any): Observable<any> {
     return this.http.post(`${this.API_URL}/login`, loginData);
