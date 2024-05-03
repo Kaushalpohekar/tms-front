@@ -76,8 +76,6 @@ export class AlertEditComponent {
         ContactNO: this.ContactNO.value
       };
 
-      console.log(TriggerData);
-
       this.DashDataService.updateTrigger(DeviceUID, TriggerData).subscribe(
         () => {
           this.snackBar.open('User updated Successfully!', 'Dismiss', {

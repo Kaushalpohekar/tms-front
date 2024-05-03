@@ -256,15 +256,14 @@
 }
 
 /* Center the spinner using Flexbox */
-.spinner-container {
+.loading-container {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100%; /* Make the container take the full height of the card */
 }
 
 /* Adjust the size of the spinner */
 .custom-spinner {
-  width: 15px; /* Set your desired width */
-  height: 15px; /* Set your desired height */
+  width: 10px; /* Set your desired width */
+  height: 10px; /* Set your desired height */
 }

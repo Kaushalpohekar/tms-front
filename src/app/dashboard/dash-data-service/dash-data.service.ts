@@ -28,7 +28,6 @@ export class DashDataService {
   }
 
   setDeviceType(deviceType: string) {
-    console.log(deviceType);
     sessionStorage.setItem('filterDeviceType', deviceType);
   }
 
@@ -61,8 +60,8 @@ export class DashDataService {
     return sessionStorage.getItem('FilterEndDate');
   }
 
-  //private readonly API_URL = 'https://tms.senselive.in:3000';
-  private readonly API_URL = 'http://localhost:3000/api';
+  private readonly API_URL = 'https://senso.senselive.in/api';
+  //private readonly API_URL = 'http://localhost:3000/api';
 
   userDevices(CompanyEmail: string): Observable<any> {
     return this.http.get(`${this.API_URL}/userdevices/${CompanyEmail}`);

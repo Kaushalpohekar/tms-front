@@ -76,7 +76,6 @@ export class TriggerDeviceComponent {
     (response: any[]) => {
       response.forEach((device) => {
         // Handle each device here
-        console.log(device);
         this.TriggerValue.setValue(device.TriggerValue);
         this.PersonalEmail.setValue(device.PersonalEmail);
         this.ContactNO.setValue(device.ContactNO);
@@ -85,7 +84,9 @@ export class TriggerDeviceComponent {
       });
     },
     () => {
-      console.log('Error fetching device data.');
+      this.snackBar.open('Error fetching device data!', 'Dismiss', {
+          duration: 2000
+        });
     }
   ); 
   }

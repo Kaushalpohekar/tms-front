@@ -45,7 +45,6 @@ export class EditUserComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
     this.user = data.data;
-    // console.log(this.user);
     this.FirstName = new FormControl(this.user.FirstName, [Validators.required]);
     this.LastName  = new FormControl(this.user.LastName, [Validators.required]);
     this.PersonalEmail = new FormControl(this.user.PersonalEmail, [Validators.required]);

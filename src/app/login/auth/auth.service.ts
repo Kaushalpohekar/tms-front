@@ -19,8 +19,8 @@ export class AuthService {
 
   constructor(private http: HttpClient, private router: Router) {}
 
-  //private readonly API_URL = 'https://tms.senselive.in:3000';
-  private readonly API_URL = 'http://localhost:3000/api';
+  private readonly API_URL = 'https://senso.senselive.in/api';
+  //private readonly API_URL = 'http://localhost:3000/api';
 
   login(loginData: any): Observable<any> {
     return this.http.post(`${this.API_URL}/login`, loginData);

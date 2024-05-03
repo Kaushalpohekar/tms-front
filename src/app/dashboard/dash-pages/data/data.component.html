@@ -2,8 +2,8 @@
 	<div class="row mb-2">
 		<div class="col-lg-4 col-md-12 col-sm-12 mb-2">
 			<mat-card class="mb-2 data-charts">
-				<div class="spinner-container" *ngIf="loading1">
-		      <mat-spinner class="custom-spinner"></mat-spinner>
+				<div *ngIf="loading1">
+		      <app-page-loading></app-page-loading>
 		    </div>
 				<div *ngIf="!loading1">
 				  <mat-card-content>
@@ -74,15 +74,20 @@
 							</div>
 						</div>
 						<div *ngIf="DeviceType === 'ws'">
-							<div class="row pt-2 mb-2">
+							<div class="row mb-2">
 								<div class="col-lg-12 col-md-6 pt-2 mb-2">
 									<div class="temp th-hum d-flex">
 										FlowRate: <div class="ms-auto">{{ DeviceFlowRate }} l/hr</div>
 									</div>
 								</div>
-								<div class="col-lg-12 col-md-6 pt-2 mb-2">
+								<div class="col-lg-12 col-md-6 mb-2">
 									<div class="temp th-hum d-flex">
 										Today Consumption: <div class="ms-auto">{{ DeviceTodayConsumption }} KL</div>
+									</div>
+								</div>
+								<div class="col-lg-12 col-md-6 mb-2">
+									<div class="temp th-hum d-flex">
+										Interval Consumption: <div class="ms-auto">{{ (DeviceIntervalConsumption).toFixed(2) }} KL</div>
 									</div>
 								</div>
 							</div>
@@ -97,29 +102,39 @@
 							</div>
 						</div>
 						<div *ngIf="DeviceType === 'ts'">
-							<div class="row pt-2 mb-2">
-								<div class="col-lg-12 col-md-6 pt-2 mb-2">
+							<div class="row mb-2">
+								<div class="col-lg-12 col-md-6 mb-2">
 									<div class="temp th-hum d-flex">
 										FlowRate: <div class="ms-auto">{{ DeviceFlowRate }} l/hr</div>
 									</div>
 								</div>
-								<div class="col-lg-12 col-md-6 pt-2 mb-2">
+								<div class="col-lg-12 col-md-6 mb-2">
 									<div class="temp th-hum d-flex">
 										Today Consumption: <div class="ms-auto">{{ DeviceTodayConsumption }} KL</div>
+									</div>
+								</div>
+								<div class="col-lg-12 col-md-6 mb-2">
+									<div class="temp th-hum d-flex">
+										Interval Consumption: <div class="ms-auto">{{ (DeviceIntervalConsumption).toFixed(2) }} KL</div>
 									</div>
 								</div>
 							</div>
 						</div>
 						<div *ngIf="DeviceType === 'fs'">
-							<div class="row pt-2 mb-2">
-								<div class="col-lg-12 col-md-6 pt-2 mb-2">
+							<div class="row mb-2">
+								<div class="col-lg-12 col-md-6 mb-2">
 									<div class="temp th-hum d-flex">
-										PressureRate: <div class="ms-auto">{{ DeviceFlowRate }} kg/hr</div>
+										FlowRate: <div class="ms-auto">{{ DeviceFlowRate }} kg/hr</div>
 									</div>
 								</div>
-								<div class="col-lg-12 col-md-6 pt-2 mb-2">
+								<div class="col-lg-12 col-md-6 mb-2">
 									<div class="temp th-hum d-flex">
 										Today Consumption: <div class="ms-auto">{{ DeviceTodayConsumption }} KG</div>
+									</div>
+								</div>
+								<div class="col-lg-12 col-md-6 mb-2">
+									<div class="temp th-hum d-flex">
+										Interval Consumption: <div class="ms-auto">{{ (DeviceIntervalConsumption).toFixed(2) }} KG</div>
 									</div>
 								</div>
 							</div>
@@ -131,8 +146,8 @@
 				</div>
 			</mat-card>
 			<mat-card class='mb-2 data-charts'>
-				<div class="spinner-container" *ngIf="loading1">
-		      <mat-spinner class="custom-spinner"></mat-spinner>
+				<div class="loading-container" *ngIf="loading1">
+		      <app-page-loading></app-page-loading>
 		    </div>
 				<div *ngIf="!loading1">
 				  <mat-card-content>
@@ -140,7 +155,7 @@
 				  		<div class="row">
 				  			<div class="col-lg-12 mb-3">
 				  				<div class="interval d-flex">Filter Applied:- 
-				  					<div class="ms-auto" *ngIf= "deviceINTERVAL === '1hour' || deviceINTERVAL === '12hour' || deviceINTERVAL === '1day' || deviceINTERVAL === '7day' || deviceINTERVAL === '30day'">Last Interval - {{ getDisplayText() }}</div>
+				  					<div class="ms-auto" *ngIf= "deviceINTERVAL === '1hour' || deviceINTERVAL === '12hour' || deviceINTERVAL === '1day' || deviceINTERVAL === '7day' || deviceINTERVAL === '30day' || deviceINTERVAL === '6month' || deviceINTERVAL === '12month'">Last Interval - {{ getDisplayText() }}</div>
 				  					<div class="ms-auto" *ngIf= "deviceINTERVAL === 'Custom'">{{ getFormattedDateRange() }}</div>
 				  				</div>
 				  			</div>

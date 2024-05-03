@@ -88,8 +88,6 @@ export class TempComponent implements OnInit {
           }
 
           this.getDeviceData();
-          console.log(this.userDevices);
-
           interval(60 * 1000).pipe(
             takeUntil(this.destroy$)
           ).subscribe(() => {
@@ -158,7 +156,6 @@ export class TempComponent implements OnInit {
           this.dashService.isPageLoading(false);
         },
         (error) =>{
-          console.log("Error");
         }
       );
     }
@@ -213,7 +210,7 @@ export class TempComponent implements OnInit {
       const minutesDifference = Math.floor(timeDifference / 1000 / 60); // Convert milliseconds to minutes
 
       // Check if the data is within the last 5 minutes (300 seconds)
-      return minutesDifference <= 5;
+      return minutesDifference <= 30;
     }
     return false; // Device data not available, consider it disconnected
   }
@@ -330,11 +327,9 @@ export class TempComponent implements OnInit {
                   });
               } else {
                 // Handle the case where CompanyEmail is null
-                console.log("CompanyEmail is null.");
                 return Promise.resolve();
               }
             } else {
-              console.log("Daily consumption data structure is unexpected.");
               return Promise.resolve();
             }
           });

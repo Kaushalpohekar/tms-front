@@ -61,6 +61,7 @@ export class DataComponent implements OnInit, OnDestroy {
   DeviceFlowRate !: any;
   DevicePressure !:any;
   DeviceTodayConsumption!: any;
+  DeviceIntervalConsumption !:any;
   // new constants
 
   deviceID!:string;
@@ -89,6 +90,10 @@ export class DataComponent implements OnInit, OnDestroy {
         return '7 Days';
       case '30day':
         return '30 Days';
+      case '6month':
+        return '6 Months';
+      case '12month':
+        return '12 Months';
       default:
         return ''; // You can provide a default value or handle it as needed
     }
@@ -125,7 +130,7 @@ export class DataComponent implements OnInit, OnDestroy {
               this.retrievingAllValues();
               this.fetchDeviceInfo(this.deviceID);
               this.router.navigate([this.router.url]);
-            }, 100);
+            }, 500);
             
           }
         },
@@ -151,7 +156,7 @@ export class DataComponent implements OnInit, OnDestroy {
       }  else{
         this.getUserDevices();
       }
-    }, 100);
+    }, 500);
   }
 
   async retrievingAllValues() {
@@ -573,7 +578,6 @@ export class DataComponent implements OnInit, OnDestroy {
 
   processChartData(response: any) {
     const data = response.data;
-    console.log(data);
     const istOffset = 5.5 * 60 * 60 * 1000; // IST offset: +5:30 in milliseconds
 
     const mapData = (entry: any, key: string) => [
@@ -628,11 +632,16 @@ export class DataComponent implements OnInit, OnDestroy {
     const data = response.data;
     const istOffset = 5.5 * 60 * 60 * 1000; // IST offset: +5:30 in milliseconds
 
-    this.consumptionData = data.map((entry: any) => [
-      new Date(entry.TimeStamp).getTime() + istOffset,
-      entry.totalVolume,
-    ]);
+    let intervalConsumption = 0;
+    this.consumptionData = data.map((entry: any) => {
+      intervalConsumption += entry.totalVolume; // Add current volume to total
+      return [
+        new Date(entry.TimeStamp).getTime() + istOffset,
+        entry.totalVolume,
+      ];
+    });
 
+    this.DeviceIntervalConsumption = intervalConsumption / 1000;
     this.createBarGraph();
   }
 

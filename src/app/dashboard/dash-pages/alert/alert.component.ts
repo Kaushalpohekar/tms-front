@@ -35,10 +35,8 @@ export class AlertComponent implements OnInit {
     this.DashDataService.getTriggersData(CompanyEmail).subscribe(
       (response: any) => {
         this.dataSource = response;
-        console.log(this.dataSource);
       },
-      () => {
-        console.log('Error fetching employee data.');
+      (error) => {
       }
     );
   }
@@ -52,7 +50,6 @@ export class AlertComponent implements OnInit {
     } else {
       newWhatsappValue = 0;
     }
-    console.log(newWhatsappValue);
 
     const WhatsApp = {
       Whatsapp : newWhatsappValue
@@ -76,7 +73,6 @@ export class AlertComponent implements OnInit {
     } else {
       newMailValue = 0;
     }
-    console.log(newMailValue);
 
     const Mail = {
       Mail : newMailValue
