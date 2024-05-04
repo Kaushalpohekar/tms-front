@@ -102,7 +102,6 @@ export class UserManageComponent implements OnInit, OnDestroy {
             device.formattedIssueDate = this.datePipe.transform(device.IssueDate, 'yyyy-MM-dd HH:mm:ss');
             return device;
           });
-          console.log(this.dataSource2);
 
           this.dataSource2 = devices.devices.map((device: DeviceData) => {
             if (device.status === "online" || device.status === "heating") {
