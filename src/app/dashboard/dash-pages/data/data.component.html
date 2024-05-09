@@ -82,12 +82,12 @@
 								</div>
 								<div class="col-lg-12 col-md-6 mb-2">
 									<div class="temp th-hum d-flex">
-										Today Consumption: <div class="ms-auto">{{ DeviceTodayConsumption }} KL</div>
+										Today Consumption: <div class="ms-auto">{{ DeviceTodayConsumption }} L</div>
 									</div>
 								</div>
 								<div class="col-lg-12 col-md-6 mb-2">
 									<div class="temp th-hum d-flex">
-										Interval Consumption: <div class="ms-auto">{{ (DeviceIntervalConsumption).toFixed(2) }} KL</div>
+										Interval Consumption: <div class="ms-auto">{{ ((DeviceIntervalConsumption) / 1000).toFixed(2) }} KL</div>
 									</div>
 								</div>
 							</div>
@@ -105,17 +105,17 @@
 							<div class="row mb-2">
 								<div class="col-lg-12 col-md-6 mb-2">
 									<div class="temp th-hum d-flex">
-										FlowRate: <div class="ms-auto">{{ DeviceFlowRate }} l/hr</div>
+										FlowRate: <div class="ms-auto">{{ DeviceFlowRate || 0 }} m³/hr</div>
 									</div>
 								</div>
 								<div class="col-lg-12 col-md-6 mb-2">
 									<div class="temp th-hum d-flex">
-										Today Consumption: <div class="ms-auto">{{ DeviceTodayConsumption }} KL</div>
+										Today Consumption: <div class="ms-auto">{{ DeviceTodayConsumption || 0 }} m³</div>
 									</div>
 								</div>
 								<div class="col-lg-12 col-md-6 mb-2">
 									<div class="temp th-hum d-flex">
-										Interval Consumption: <div class="ms-auto">{{ (DeviceIntervalConsumption).toFixed(2) }} KL</div>
+										Interval Consumption: <div class="ms-auto">{{ ((DeviceIntervalConsumption || 0)).toFixed(2) }} m³ </div>
 									</div>
 								</div>
 							</div>
@@ -124,17 +124,17 @@
 							<div class="row mb-2">
 								<div class="col-lg-12 col-md-6 mb-2">
 									<div class="temp th-hum d-flex">
-										FlowRate: <div class="ms-auto">{{ DeviceFlowRate }} kg/hr</div>
+										FlowRate: <div class="ms-auto">{{ (DeviceFlowRate).toFixed(2) }} kg/hr</div>
 									</div>
 								</div>
 								<div class="col-lg-12 col-md-6 mb-2">
 									<div class="temp th-hum d-flex">
-										Today Consumption: <div class="ms-auto">{{ DeviceTodayConsumption }} KG</div>
+										Today Consumption: <div class="ms-auto">{{ (DeviceTodayConsumption).toFixed(2) }} KG</div>
 									</div>
 								</div>
 								<div class="col-lg-12 col-md-6 mb-2">
 									<div class="temp th-hum d-flex">
-										Interval Consumption: <div class="ms-auto">{{ (DeviceIntervalConsumption).toFixed(2) }} KG</div>
+										Interval Consumption: <div class="ms-auto">{{ ((DeviceIntervalConsumption || 0) / 1000).toFixed(2) }} Tonne</div>
 									</div>
 								</div>
 							</div>

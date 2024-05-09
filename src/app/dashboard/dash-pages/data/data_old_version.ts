@@ -10,13 +10,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { forkJoin, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import HighchartsExporting from 'highcharts/modules/exporting';
-import HighchartsExportData from 'highcharts/modules/export-data';
-
 
 HighchartsMore(Highcharts);
-HighchartsExporting(Highcharts);
-HighchartsExportData(Highcharts);
 
 @Component({
   selector: 'app-data',
@@ -73,6 +68,9 @@ export class DataComponent implements OnInit, OnDestroy {
   deviceINTERVAL!:string;
   deviceSTART!:string;
   deviceEND!:string;
+
+  //Charts variable 
+  FlowRateChart !: any;
 
   ngOnInit() {
     this.retrievingValues();
@@ -158,6 +156,38 @@ export class DataComponent implements OnInit, OnDestroy {
     setTimeout(() => { 
       if(this.deviceID && this.DeviceType && this.deviceINTERVAL){
         this.retrievingAllValues();
+        switch (this.DeviceType) {
+          case 'th':
+            this.createChart();
+            this.createChart2();
+            break;
+          case 't':
+            this.createChart();
+            break;
+          case 'h':
+            this.createChart2();
+            break;
+          case 'ryb':
+            this.createTemperature();
+            break;
+          case 'ws':
+            this.createChart3();
+            this.createBarGraph();
+            break;
+          case 'fs':
+            this.createChart3();
+            this.createBarGraph();
+            break;
+          case 'ts':
+            this.createChart3();
+            this.createBarGraph();
+            break;
+          case 'ps':
+            this.createChart4();
+            break;
+          default:
+            this.snackBar.open('Device Type is not found!', 'Dismiss', { duration: 2000 });
+        }
       }  else{
         this.getUserDevices();
       }
@@ -168,6 +198,7 @@ export class DataComponent implements OnInit, OnDestroy {
     try {
       this.fetchDeviceInfo(this.deviceID);
       let dataWSPromise, dataPromise;
+      
       if (this.DeviceType === 'ws' || this.DeviceType === 'fs' || this.DeviceType === 'ts') {
         if (this.deviceINTERVAL === 'Custom') {
           dataWSPromise = this.DashDataService.getCustomConsumption(this.deviceID, this.deviceSTART, this.deviceEND).pipe(takeUntil(this.destroy$)).toPromise();
@@ -185,10 +216,36 @@ export class DataComponent implements OnInit, OnDestroy {
       }
 
       const [dataWS, data] = await Promise.all([dataWSPromise, dataPromise]);
-      this.processChartData(data);
+      //this.processChartData(data);
+      const dataToProcess = data.data;
+      const istOffset = 5.5 * 60 * 60 * 1000; // IST offset: +5:30 in milliseconds
+
+      const mapData = (entry: any, key: string) => [
+        new Date(entry.bucket_start_time).getTime() + istOffset,
+        key ? parseFloat(entry[key]) : entry[key],
+      ];
+
+      this.temperatureData = dataToProcess.map((entry: any) => mapData(entry, 'Temperature'));
+      this.humidityData = dataToProcess.map((entry: any) => mapData(entry, 'Humidity'));
+      this.temperatureRData = dataToProcess.map((entry: any) => mapData(entry, 'TemperatureR'));
+      this.temperatureYData = dataToProcess.map((entry: any) => mapData(entry, 'TemperatureY'));
+      this.temperatureBData = dataToProcess.map((entry: any) => mapData(entry, 'TemperatureB'));
+      this.timestampData = dataToProcess.map((entry: any) => new Date(entry.bucket_start_time).getTime() + istOffset);
+      this.flowRateData = dataToProcess.map((entry: any) => mapData(entry, 'flowRate'));
+      this.pressureData = dataToProcess.map((entry: any) => mapData(entry, 'Pressure'));
+      
+
+      if (this.flowRateData) {
+        const newData = this.flowRateData;
+        this.FlowRateChart.series[0].setData(newData);
+        this.FlowRateChart.hideLoading();
+      }
+
+
       if (dataWS) {
         this.processChartDataWS(dataWS);
       }
+      this.loading1 = false;
       this.router.navigate([this.router.url]);
 
     } catch (error) {
@@ -285,14 +342,7 @@ export class DataComponent implements OnInit, OnDestroy {
       credits: {
         enabled: false, // Disable the credits display
       },
-      exporting: {
-        enabled: true,
-        buttons: {
-          contextButton: {
-            menuItems: ['downloadCSV', 'downloadXLS'],
-          },
-        },
-      },
+
       xAxis: {
         type: 'datetime',
         timezoneOffset: 330,
@@ -339,14 +389,7 @@ export class DataComponent implements OnInit, OnDestroy {
       credits: {
         enabled: false, // Disable the credits display
       },
-      exporting: {
-        enabled: true,
-        buttons: {
-          contextButton: {
-            menuItems: ['downloadCSV', 'downloadXLS'],
-          },
-        },
-      },
+
       xAxis: {
         type: 'datetime',
       },
@@ -379,57 +422,91 @@ export class DataComponent implements OnInit, OnDestroy {
     } as Highcharts.Options);
   }
 
-  createChart3() {
-    Highcharts.chart('curvedLineChart3', {
-      chart: {
-        type: 'spline',
-      },
+  // createChart3() {
+  //   Highcharts.chart('curvedLineChart3', {
+  //     chart: {
+  //       type: 'spline',
+  //     },
+  //     title: {
+  //       text: '',
+  //     },
+  //     credits: {
+  //       enabled: false, // Disable the credits display
+  //     },
+
+  //     xAxis: {
+  //       type: 'datetime',
+  //       timezoneOffset: 330,
+  //     },
+  //     yAxis: {
+  //       title: {
+  //         text: 'Flow Rate',
+  //       },
+  //     },
+  //     series: [
+  //       {
+  //         name: 'Flow Rate',
+  //         color: {
+  //           linearGradient: {
+  //             x1: 0,
+  //             x2: 0,
+  //             y1: 0,
+  //             y2: 1,
+  //           },
+  //           stops: [
+  //             [0, 'rgba(0, 0, 255, 1)'], // Start color (blue)
+  //             [1, 'rgba(0, 255, 255, 0.3)'], // End color (yellow)
+  //           ],
+  //         },
+  //         data: this.flowRateData,
+  //         marker: {
+  //           radius: 3, // Set the desired size of the points
+  //         },
+  //       },
+  //     ] as any,
+  //   } as Highcharts.Options);
+  // }
+createChart3() {
+  this.FlowRateChart = Highcharts.chart({
+    chart: {
+      type: 'spline',
+      renderTo: 'curvedLineChart3',
+    },
+    title: {
+      text: undefined,
+    },
+    credits: {
+      enabled: false,
+    },
+    xAxis: {
+      type: 'datetime',
+    },
+    yAxis: {
       title: {
-        text: '',
+        text: 'Flow Rate',
       },
-      credits: {
-        enabled: false, // Disable the credits display
+    },
+    series: [{
+      type: 'spline',
+      name: 'Flow Rate',
+      color: {
+        linearGradient: { x1: 0, x2: 0, y1: 0, y2: 1 },
+        stops: [
+          [0, 'rgba(0, 0, 255, 1)'],
+          [1, 'rgba(0, 255, 255, 0.3)'],
+        ],
       },
-      exporting: {
-        enabled: true,
-        buttons: {
-          contextButton: {
-            menuItems: ['downloadCSV', 'downloadXLS'],
-          },
-        },
+      data: [],
+      marker: {
+        radius: 3,
       },
-      xAxis: {
-        type: 'datetime',
-        timezoneOffset: 330,
-      },
-      yAxis: {
-        title: {
-          text: 'Flow Rate',
-        },
-      },
-      series: [
-        {
-          name: 'Flow Rate',
-          color: {
-            linearGradient: {
-              x1: 0,
-              x2: 0,
-              y1: 0,
-              y2: 1,
-            },
-            stops: [
-              [0, 'rgba(0, 0, 255, 1)'], // Start color (blue)
-              [1, 'rgba(0, 255, 255, 0.3)'], // End color (yellow)
-            ],
-          },
-          data: this.flowRateData,
-          marker: {
-            radius: 3, // Set the desired size of the points
-          },
-        },
-      ] as any,
-    } as Highcharts.Options);
-  }
+    }],
+  });
+  this.FlowRateChart.showLoading("loaading...");
+}
+
+
+
 
   createChart4() {
     Highcharts.chart('curvedLineChart4', {
@@ -442,14 +519,7 @@ export class DataComponent implements OnInit, OnDestroy {
       credits: {
         enabled: false, // Disable the credits display
       },
-      exporting: {
-        enabled: true,
-        buttons: {
-          contextButton: {
-            menuItems: ['downloadCSV', 'downloadXLS'],
-          },
-        },
-      },
+
       xAxis: {
         type: 'datetime',
         timezoneOffset: 330,
@@ -493,14 +563,6 @@ export class DataComponent implements OnInit, OnDestroy {
       },
       credits: {
         enabled: false,
-      },
-      exporting: {
-        enabled: true,
-        buttons: {
-          contextButton: {
-            menuItems: ['downloadCSV', 'downloadXLS'],
-          },
-        },
       },
       xAxis: {
         type: 'datetime',
@@ -573,14 +635,6 @@ export class DataComponent implements OnInit, OnDestroy {
       },
       credits: {
         enabled: false, // Disable the credits display
-      },
-      exporting: {
-        enabled: true,
-        buttons: {
-          contextButton: {
-            menuItems: ['downloadCSV', 'downloadXLS'],
-          },
-        },
       },
       xAxis: {
         type: 'datetime',
@@ -684,17 +738,15 @@ export class DataComponent implements OnInit, OnDestroy {
     let intervalConsumption = 0;
     this.consumptionData = data.map((entry: any) => {
       intervalConsumption += entry.totalVolume; // Add current volume to total
-      const fixedTotalVolume = entry.totalVolume.toFixed(2); // Fixing to 2 decimal places
       return [
         new Date(entry.TimeStamp).getTime() + istOffset,
-        parseFloat(fixedTotalVolume), // Parse to float to ensure it's a number
+        entry.totalVolume,
       ];
     });
 
-    this.DeviceIntervalConsumption = intervalConsumption;
+    this.DeviceIntervalConsumption = intervalConsumption / 1000;
     this.createBarGraph();
   }
-
 
   fetchDeviceInfo(deviceId: string) {
     const deviceDetails$ = this.DashDataService.deviceDetails(deviceId);
@@ -726,15 +778,13 @@ export class DataComponent implements OnInit, OnDestroy {
               .subscribe(
                 (deviceConsumtion: any) => {
                   if (deviceConsumtion.length > 0 && deviceConsumtion[0].totalVolume !== undefined && deviceConsumtion[0].totalVolume !== null && deviceConsumtion[0].totalVolume !== 0) {
-                    this.DeviceTodayConsumption = (deviceConsumtion[0].totalVolume);
+                    this.DeviceTodayConsumption = (deviceConsumtion[0].totalVolume / 1000).toFixed(2);
                   } else {
                     this.DeviceTodayConsumption = 0;
                   }
                 }
               );
           }
-
-          this.loading1 = false;
         },
         (error) => {
           this.snackBar.open('Error while fetching last data!', 'Dismiss', {
