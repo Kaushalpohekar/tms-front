@@ -17,128 +17,135 @@
 			  		<div class="panel-device-name d-flex">Device Name: 
 			  			<div class="ms-auto">{{ DeviceName }}</div>
 			  		</div>
-			  		<div *ngIf="DeviceType === 'ryb' || DeviceType === 'th'|| DeviceType === 't'">
+			  		<div *ngIf="DeviceType === 'ryb' || DeviceType === 'th'|| DeviceType === 't' || DeviceType === 'wl'">
 				  		<div class="panel-device-trigger d-flex">Trigger: 
 				  			<div class="ms-auto">{{ DeviceTrigger }}</div>
 				  		</div>	
 			  		</div>			  
-						<div *ngIf="DeviceType === 'ryb'">
-							<div class="row mb-2">
-								<div class="col-lg-12 col-md-4">
-									<div class="temp ryb-th-t d-flex" [class.ryb-alert]="DeviceTemperatureR > DeviceTrigger">
-										Temperature R: <div class="ms-auto">{{ DeviceTemperatureR }}</div>
-									</div>
+					<div *ngIf="DeviceType === 'ryb'">
+						<div class="row mb-2">
+							<div class="col-lg-12 col-md-4">
+								<div class="temp ryb-th-t d-flex" [class.ryb-alert]="DeviceTemperatureR > DeviceTrigger">
+									Temperature R: <div class="ms-auto">{{ DeviceTemperatureR }}</div>
 								</div>
-								<div class="col-lg-12 col-md-4">
-									<div class="temp ryb-th-t d-flex" [class.ryb-alert]="DeviceTemperatureY > DeviceTrigger">
-										Temperature Y: <div class="ms-auto">{{ DeviceTemperatureY }}</div>
-									</div>
+							</div>
+							<div class="col-lg-12 col-md-4">
+								<div class="temp ryb-th-t d-flex" [class.ryb-alert]="DeviceTemperatureY > DeviceTrigger">
+									Temperature Y: <div class="ms-auto">{{ DeviceTemperatureY }}</div>
 								</div>
-								<div class="col-lg-12 col-md-4">
-									<div class="temp ryb-th-t d-flex" [class.ryb-alert]="DeviceTemperatureB > DeviceTrigger">
-										Temperature B: <div class="ms-auto">{{ DeviceTemperatureB }}</div>
-									</div>
+							</div>
+							<div class="col-lg-12 col-md-4">
+								<div class="temp ryb-th-t d-flex" [class.ryb-alert]="DeviceTemperatureB > DeviceTrigger">
+									Temperature B: <div class="ms-auto">{{ DeviceTemperatureB }}</div>
 								</div>
 							</div>
 						</div>
-						<div *ngIf="DeviceType === 'th'">
-							<div class="row mb-2">
-								<div class="col-lg-12 col-md-4">
-									<div class="temp ryb-th-t d-flex">
-										Temperature : <div class="ms-auto">{{ DeviceTemperature }}</div>
-									</div>
+					</div>
+					<div *ngIf="DeviceType === 'th'">
+						<div class="row mb-2">
+							<div class="col-lg-12 col-md-4">
+								<div class="temp ryb-th-t d-flex">
+									Temperature : <div class="ms-auto">{{ DeviceTemperature }}</div>
 								</div>
-								<div class="col-lg-12 col-md-4">
-									<div class="temp th-hum d-flex">
-										Humidity: <div class="ms-auto">{{ DeviceHumidity }}</div>
-									</div>
+							</div>
+							<div class="col-lg-12 col-md-4">
+								<div class="temp th-hum d-flex">
+									Humidity: <div class="ms-auto">{{ DeviceHumidity }}</div>
 								</div>
 							</div>
 						</div>
-						<div *ngIf="DeviceType === 't'">
-							<div class="row mb-2">
-								<div class="col-lg-12 col-md-4">
-									<div class="temp th-temp d-flex">
-										Temperature : <div class="ms-auto">{{ DeviceTemperature }}</div>
-									</div>
+					</div>
+					<div *ngIf="DeviceType === 't'">
+						<div class="row mb-2">
+							<div class="col-lg-12 col-md-4">
+								<div class="temp th-temp d-flex">
+									Temperature : <div class="ms-auto">{{ DeviceTemperature }}</div>
 								</div>
 							</div>
 						</div>
-						<div *ngIf="DeviceType === 'h'">
-							<div class="row mb-2">
-								<div class="col-lg-12 col-md-4">
-									<div class="temp th-temp d-flex">
-										Humidity : <div class="ms-auto">{{ DeviceHumidity }}</div>
-									</div>
+					</div>
+					<div *ngIf="DeviceType === 'h'">
+						<div class="row mb-2">
+							<div class="col-lg-12 col-md-4">
+								<div class="temp th-temp d-flex">
+									Humidity : <div class="ms-auto">{{ DeviceHumidity }}</div>
 								</div>
 							</div>
 						</div>
-						<div *ngIf="DeviceType === 'ws'">
-							<div class="row mb-2">
-								<div class="col-lg-12 col-md-6 pt-2 mb-2">
-									<div class="temp th-hum d-flex">
-										FlowRate: <div class="ms-auto">{{ DeviceFlowRate }} l/hr</div>
-									</div>
+					</div>
+					<div *ngIf="DeviceType === 'ws'">
+						<div class="row mb-2">
+							<div class="col-lg-12 col-md-6 pt-2 mb-2">
+								<div class="temp th-hum d-flex">
+									FlowRate: <div class="ms-auto">{{ DeviceFlowRate }} l/hr</div>
 								</div>
-								<div class="col-lg-12 col-md-6 mb-2">
-									<div class="temp th-hum d-flex">
-										Today Consumption: <div class="ms-auto">{{ DeviceTodayConsumption }} KL</div>
-									</div>
+							</div>
+							<div class="col-lg-12 col-md-6 mb-2">
+								<div class="temp th-hum d-flex">
+									Today Consumption: <div class="ms-auto">{{ DeviceTodayConsumption }} KL</div>
 								</div>
-								<div class="col-lg-12 col-md-6 mb-2">
-									<div class="temp th-hum d-flex">
-										Interval Consumption: <div class="ms-auto">{{ (DeviceIntervalConsumption).toFixed(2) }} KL</div>
-									</div>
+							</div>
+							<div class="col-lg-12 col-md-6 mb-2">
+								<div class="temp th-hum d-flex">
+									Interval Consumption: <div class="ms-auto">{{ (DeviceIntervalConsumption).toFixed(2) }} KL</div>
 								</div>
 							</div>
 						</div>
-						<div *ngIf="DeviceType === 'ps'">
-							<div class="row mb-2">
-								<div class="col-lg-12 col-md-4">
-									<div class="temp th-ps d-flex">
-										Pressure : <div class="ms-auto">{{ DevicePressure }}  m³/hr</div>
-									</div>
+					</div>
+					<div *ngIf="DeviceType === 'ps'">
+						<div class="row mb-2">
+							<div class="col-lg-12 col-md-4">
+								<div class="temp th-ps d-flex">
+									Pressure : <div class="ms-auto">{{ DevicePressure }}  m³/hr</div>
 								</div>
 							</div>
 						</div>
-						<div *ngIf="DeviceType === 'ts'">
-							<div class="row mb-2">
-								<div class="col-lg-12 col-md-6 mb-2">
-									<div class="temp th-hum d-flex">
-										FlowRate: <div class="ms-auto">{{ DeviceFlowRate }} l/hr</div>
-									</div>
+					</div>
+					<div *ngIf="DeviceType === 'ts'">
+						<div class="row mb-2">
+							<div class="col-lg-12 col-md-6 mb-2">
+								<div class="temp th-hum d-flex">
+									FlowRate: <div class="ms-auto">{{ DeviceFlowRate }} l/hr</div>
 								</div>
-								<div class="col-lg-12 col-md-6 mb-2">
-									<div class="temp th-hum d-flex">
-										Today Consumption: <div class="ms-auto">{{ DeviceTodayConsumption }} KL</div>
-									</div>
+							</div>
+							<div class="col-lg-12 col-md-6 mb-2">
+								<div class="temp th-hum d-flex">
+									Today Consumption: <div class="ms-auto">{{ DeviceTodayConsumption }} KL</div>
 								</div>
-								<div class="col-lg-12 col-md-6 mb-2">
-									<div class="temp th-hum d-flex">
-										Interval Consumption: <div class="ms-auto">{{ (DeviceIntervalConsumption).toFixed(2) }} KL</div>
-									</div>
+							</div>
+							<div class="col-lg-12 col-md-6 mb-2">
+								<div class="temp th-hum d-flex">
+									Interval Consumption: <div class="ms-auto">{{ (DeviceIntervalConsumption).toFixed(2) }} KL</div>
 								</div>
 							</div>
 						</div>
-						<div *ngIf="DeviceType === 'fs'">
-							<div class="row mb-2">
-								<div class="col-lg-12 col-md-6 mb-2">
-									<div class="temp th-hum d-flex">
-										FlowRate: <div class="ms-auto">{{ DeviceFlowRate }} kg/hr</div>
-									</div>
+					</div>
+					<div *ngIf="DeviceType === 'fs'">
+						<div class="row mb-2">
+							<div class="col-lg-12 col-md-6 mb-2">
+								<div class="temp th-hum d-flex">
+									FlowRate: <div class="ms-auto">{{ DeviceFlowRate }} kg/hr</div>
 								</div>
-								<div class="col-lg-12 col-md-6 mb-2">
-									<div class="temp th-hum d-flex">
-										Today Consumption: <div class="ms-auto">{{ DeviceTodayConsumption }} KG</div>
-									</div>
+							</div>
+							<div class="col-lg-12 col-md-6 mb-2">
+								<div class="temp th-hum d-flex">
+									Today Consumption: <div class="ms-auto">{{ DeviceTodayConsumption }} KG</div>
 								</div>
-								<div class="col-lg-12 col-md-6 mb-2">
-									<div class="temp th-hum d-flex">
-										Interval Consumption: <div class="ms-auto">{{ (DeviceIntervalConsumption).toFixed(2) }} KG</div>
-									</div>
+							</div>
+							<div class="col-lg-12 col-md-6 mb-2">
+								<div class="temp th-hum d-flex">
+									Interval Consumption: <div class="ms-auto">{{ (DeviceIntervalConsumption).toFixed(2) }} KG</div>
 								</div>
 							</div>
 						</div>
+					</div>
+					<div *ngIf="DeviceType === 'wl'">
+						<div class="row mb-2">
+							<div class="temp ryb-th-t d-flex" [class.ryb-alert]="DeviceTemperature > DeviceTrigger">
+								Water Level : <div class="ms-auto">{{ DeviceTemperature }} Mtr</div>
+							</div>
+						</div>
+					</div>
 				    <!-- <div class="panel-device-time">
 				      Last Updated: <span>{{ DeviceLastUpdatedTime }}</span>
 				    </div> -->
@@ -239,6 +246,14 @@
 				<mat-card class="mb-2 data-charts">
 				  <mat-card-content>
 				  	<div id="barChart" class="chart-container"></div>
+				  </mat-card-content>
+				</mat-card>
+			</div>
+
+			<div *ngIf="DeviceType === 'wl'">
+				<mat-card class="mb-2 data-charts-2">
+				  <mat-card-content>
+				  	<div id="curvedLineChart" class="chart-container-2"></div>
 				  </mat-card-content>
 				</mat-card>
 			</div>

@@ -104,6 +104,9 @@ export class AppMqttComponent implements OnInit {
       case 't':
         this.displayedColumns = ['DeviceName', 'DeviceUID', 'Date', 'Temperature'];
         break;
+      case 'wl':
+        this.displayedColumns = ['DeviceName', 'DeviceUID', 'Date', 'WaterLevel'];
+        break;
       case 'h':
         this.displayedColumns = ['DeviceName', 'DeviceUID', 'Date', 'Humidity'];
         break;
@@ -121,6 +124,7 @@ export class AppMqttComponent implements OnInit {
       case 'ts':
         this.displayedColumns = ['DeviceName', 'DeviceUID', 'Date', 'flowRate', 'Totalizer'];
         break;
+      
       default:
         this.displayedColumns = ['DeviceName', 'DeviceUID', 'Date']; // Default columns
     }
@@ -209,6 +213,9 @@ export class AppMqttComponent implements OnInit {
       this.setDisplayedColumns();
       if(this.selectedDeviceType === 't'){
         this.processChartDataT(data);
+      }
+        else if(this.selectedDeviceType === 'wl'){
+          this.processChartDataWL(data);
       } else if(this.selectedDeviceType === 'h'){
         this.processChartDataH(data);
       } else if(this.selectedDeviceType === 'ps'){
@@ -389,91 +396,31 @@ export class AppMqttComponent implements OnInit {
     this.dataSource.paginator = this.paginator;
   }
 
-  // mergeChartData(responseWSFS: any, responseWSFSTotal: any) {
-  //   const processedDataWSFS = this.processChartDataWSFS(responseWSFS);
-  //   const processedDataWSFSTotal = this.processChartDataWSFSTotal(responseWSFSTotal);
+  processChartDataWL(response: any) {
+    const data = response.data;
+    const istOffset = 5.5 * 60 * 60 * 1000;
 
-  //   // Create an object to store aggregated totalVolume for each date
-  //   const totalVolumeMap: { [date: string]: number } = {};
+    const processedData = data.map((entry: any) => {
+      const DeviceUID = entry.DeviceUID;
+      const deviceOption = this.deviceOptions.find(device => device.DeviceUID === DeviceUID);
 
-  //   // Aggregate totalVolume values for each date from processedDataWSFSTotal
-  //   processedDataWSFSTotal.forEach((wsfstotalEntry: any) => {
-  //     const key = wsfstotalEntry.Date;
-  //     totalVolumeMap[key] = (totalVolumeMap[key] || 0) + parseFloat(wsfstotalEntry.totalVolume);
-  //   });
+      const timestamp = new Date(entry.bucket_start_time).getTime() + istOffset;
+      const Temperature = entry.Temperature ? parseFloat(entry.Temperature).toFixed(1) : '0';
 
-  //   // Merge the data from processedDataWSFS and add aggregated totalVolume
-  //   const mergedData = processedDataWSFS.map((wsfsEntry: any) => {
-  //     const key = wsfsEntry.Date;
-  //     const aggregatedTotalVolume = totalVolumeMap[key];
-      
-  //     return {
-  //       ...wsfsEntry,
-  //       totalVolume: aggregatedTotalVolume || 'N/A'
-  //     };
-  //   });
+      const formattedDate = new Date(timestamp).toISOString().replace(/T/, ' ').replace(/\..+/, '');
 
-  //   this.dataSource.data = mergedData;
-  //   this.dataSource.paginator = this.paginator;
-  //   console.log(this.dataSource);
-  // }
+      return {
+        DeviceName: deviceOption ? deviceOption.DeviceName : '',
+        DeviceUID : DeviceUID,
+        Date: formattedDate,
+        WaterLevel: Temperature,
+      };
+    });
 
-
-  // processChartDataWSFS(response: any) {
-  //   const data = response.data;
-  //   const istOffset = 5.5 * 60 * 60 * 1000;
-
-  //   return data.map((entry: any) => {
-  //     const DeviceUID = entry.DeviceUID;
-  //     const deviceOption = this.deviceOptions.find(device => device.DeviceUID === DeviceUID);
-
-  //     const timestamp = new Date(entry.bucket_start_time).getTime();
-  //     const flowRate = entry.flowRate ? parseFloat(entry.flowRate).toFixed(1) : '0';
-
-  //     const formattedDate = new Date(timestamp).toISOString().replace(/T/, ' ').replace(/\..+/, '');
-
-  //     return {
-  //       DeviceName: deviceOption ? deviceOption.DeviceName : '',
-  //       DeviceUID: DeviceUID,
-  //       Date: formattedDate,
-  //       flowRate: flowRate
-  //     };
-  //   });
-  // }
-
-  // processChartDataWSFSTotal(response: any) {
-  //   const data = response.data;
-  //   const istOffset = 5.5 * 60 * 60 * 1000;
-
-  //   return data.map((entry: any) => {
-  //     const DeviceUID = entry.DeviceUID;
-  //     const deviceOption = this.deviceOptions.find(device => device.DeviceUID === DeviceUID);
-
-  //     const timestamp = new Date(entry.TimeStamp);
-  //     const totalVolume = entry.totalVolume ? parseFloat(entry.totalVolume).toFixed(1) : '0';
-
-  //     // Format the date as 'Jan 21, 2024, 5:30:00 AM'
-  //     const formattedDate = new Date(timestamp).toLocaleString('en-US', {
-  //       month: 'short',
-  //       day: 'numeric',
-  //       year: 'numeric',
-  //       hour: 'numeric',
-  //       minute: 'numeric',
-  //       second: 'numeric',
-  //       hour12: true,
-  //     });
-
-  //     return {
-  //       DeviceName: deviceOption ? deviceOption.DeviceName : '',
-  //       DeviceUID: DeviceUID,
-  //       Date: formattedDate,
-  //       totalVolume: totalVolume
-  //     };
-  //   });
-  // }
-
-
-
+    this.dataSource.data = processedData;
+    this.dataSource.paginator = this.paginator;
+  }
+  
   downloadCSV() {
     const startDateFormatted = this.datePipe.transform(this.start_date.value, 'yyyyMMdd');
     const endDateFormatted = this.datePipe.transform(this.end_date.value, 'yyyyMMdd');
