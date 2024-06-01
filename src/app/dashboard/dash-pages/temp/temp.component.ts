@@ -182,7 +182,7 @@ export class TempComponent implements OnInit {
           TemperatureB: entryData.TemperatureB ? parseFloat(entryData.TemperatureB) : undefined,
           flowRate: entryData.flowRate ? parseInt(entryData.flowRate) : undefined,
           Pressure: entryData.Pressure ? parseFloat(entryData.Pressure) : undefined,
-          totalVolume: entryData.totalVolume ? parseInt(entryData.totalVolume) : undefined,
+          totalVolume: entryData.totalVolume ? parseFloat(entryData.totalVolume) : undefined,
           Timestamp: timestampIST.toISOString() // Convert back to ISO string
         };
 
@@ -311,8 +311,8 @@ export class TempComponent implements OnInit {
                         todayConsumption: today,
                         yesterdayConsumption: yesterday,
                         dailyPercentageChange: dailyPercentageChange,
-                        thisMonthConsumption: (thisMonth / 1000).toFixed(0),
-                        lastMonthConsumption: (lastMonth / 1000).toFixed(0),
+                        thisMonthConsumption: (thisMonth),
+                        lastMonthConsumption: (lastMonth),
                         monthlyPercentageChange: monthlyPercentageChange
                       };
 
