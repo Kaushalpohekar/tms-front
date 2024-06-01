@@ -14,7 +14,7 @@
                   <div class="device-name">{{ device.DeviceName}}</div>
                 </div>
                 <div class="col-4 card-title-right">
-                  <div class="device-time">
+                  <div class="device-time">  
                     <div *ngIf="isDeviceConnected(device.DeviceUID)" class="live-tag">Live</div>
                     <div *ngIf="!isDeviceConnected(device.DeviceUID)" class="disconnected-tag">Disconnect</div>
                   </div>

@@ -256,11 +256,17 @@ export class DataComponent implements OnInit, OnDestroy {
         pie: {
           innerSize: '50%',
         },
+        column :{ //Changing 'bar' to 'column'
+          dataLabels :{
+            enabled:true
+          }
+        }
       },
       tooltip: {
         pointFormat:
           '{series.name}: <b>{point.y}%</b> <br><b>({point.time})<b>',
       },
+      
       series: [
         {
           type: 'pie',
@@ -303,6 +309,13 @@ export class DataComponent implements OnInit, OnDestroy {
           text: 'Temperature',
         },
         //gridLineWidth: 0,
+      },
+      plotOptions :{
+        column :{ //Changing 'bar' to 'column'
+          dataLabels :{
+            enabled:true,
+          }
+        }
       },
       series: [
         {
@@ -356,6 +369,13 @@ export class DataComponent implements OnInit, OnDestroy {
           text: 'Humidity',
         },
       },
+      plotOptions :{
+        column :{ //Changing 'bar' to 'column'
+          dataLabels :{
+            enabled:true
+          }
+        }
+      },
       series: [
         {
           name: 'Humitidy',
@@ -408,6 +428,13 @@ export class DataComponent implements OnInit, OnDestroy {
           text: 'Flow Rate',
         },
       },
+      plotOptions :{
+        column :{ //Changing 'bar' to 'column'
+          dataLabels :{
+            enabled:true
+          }
+        }
+      },
       series: [
         {
           name: 'Flow Rate',
@@ -459,6 +486,13 @@ export class DataComponent implements OnInit, OnDestroy {
         title: {
           text: 'Pressure',
         },
+      },
+      plotOptions :{
+        column :{ //Changing 'bar' to 'column'
+          dataLabels :{
+            enabled:true
+          }
+        }
       },
       series: [
         {
@@ -513,6 +547,13 @@ export class DataComponent implements OnInit, OnDestroy {
         },
         // min: 0,
         // max: 100,
+      },
+      plotOptions :{
+        column :{ //Changing 'bar' to 'column'
+          dataLabels :{
+            enabled:true
+          }
+        }
       },
       series: [
         {
@@ -592,6 +633,13 @@ export class DataComponent implements OnInit, OnDestroy {
           text: 'Total Comsumption',
         },
       },
+      plotOptions :{
+        column :{ //Changing 'bar' to 'column'
+          dataLabels :{
+            enabled:true
+          }
+        }
+      },
       series: [
         {
           name: 'Total Comsumption',
@@ -636,6 +684,13 @@ export class DataComponent implements OnInit, OnDestroy {
           text: 'Level',
         },
         //gridLineWidth: 0,
+      },
+      plotOptions :{
+        column :{ //Changing 'bar' to 'column'
+          dataLabels :{
+            enabled:true
+          }
+        }
       },
       series: [
         {
