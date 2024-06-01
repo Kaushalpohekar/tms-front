@@ -674,7 +674,14 @@ export class DataComponent implements OnInit, OnDestroy {
       credits: {
         enabled: false, // Disable the credits display
       },
-
+      exporting: {
+        enabled: true,
+        buttons: {
+          contextButton: {
+            menuItems: ['downloadCSV', 'downloadXLS'],
+          },
+        },
+      },
       xAxis: {
         type: 'datetime',
         timezoneOffset: 330,
