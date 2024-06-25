@@ -14,7 +14,7 @@
                   <div class="device-name">{{ device.DeviceName}}</div>
                 </div>
                 <div class="col-4 card-title-right">
-                  <div class="device-time">
+                  <div class="device-time">  
                     <div *ngIf="isDeviceConnected(device.DeviceUID)" class="live-tag">Live</div>
                     <div *ngIf="!isDeviceConnected(device.DeviceUID)" class="disconnected-tag">Disconnect</div>
                   </div>
@@ -134,6 +134,20 @@
                   </div>
                 </div>
               </div>
+              <div class="row" *ngIf="device.DeviceType === 'wl'">
+                <div class="col-2 d-flex">
+                  <img src="../../../../assets/img/wl.png" class="card-img-ryb">
+                  <!-- <div class="image-text-ts-3">{{ (deviceData[getIndex(device.DeviceUID)]?.flowRate || 00).toFixed(0) }} 
+                    <div class="image-text-ts-3">m³</div>
+                  </div> -->
+                </div>
+                <div class="col-4">
+                  <div class="image-text-ts">{{ (deviceData[getIndex(device.DeviceUID)]?.Temperature || 00).toFixed(0) }} mtr</div>
+                  <div class="image-text-ts-2">
+                    Water Level
+                  </div>
+                </div>
+              </div>
             </mat-card-content>
           </mat-card>
           <div class="type-text" *ngIf="device.DeviceType === 'ryb'">RYB</div>
@@ -144,6 +158,7 @@
           <div class="type-text" *ngIf="device.DeviceType === 'fs'">Flow  Sensor</div>
           <div class="type-text" *ngIf="device.DeviceType === 'ps'">Pressure Sensor</div>
           <div class="type-text" *ngIf="device.DeviceType === 'ts'">Totalizer</div>
+          <div class="type-text" *ngIf="device.DeviceType === 'wl'">Water Level</div>
         </div>
         <div class="col-2" *ngIf="getUserType() === 'Admin'">
           <div class="d-flex flex-column align-items-left">

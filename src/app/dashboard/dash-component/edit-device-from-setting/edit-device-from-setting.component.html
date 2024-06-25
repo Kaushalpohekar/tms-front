@@ -45,6 +45,7 @@
                     <mat-option value="fs">Flow Sensor</mat-option>
                     <mat-option value="ps">Pressure Sensor</mat-option>
                     <mat-option value="ts">Totalizer</mat-option>
+                    <mat-option value="wl">Water level</mat-option>
                 </mat-select>
                 <mat-error *ngIf="DeviceType.invalid">Device Type is Required.</mat-error>
             </mat-form-field>
@@ -78,9 +79,12 @@
               <ng-container *ngIf="DeviceType.value === 'ts'">
                 <mat-option value="m³">m³</mat-option>
               </ng-container>
+              <ng-container *ngIf="DeviceType.value === 'wl'">
+                <mat-option value="m³">m³</mat-option>
+              </ng-container>
             </mat-select>
               <mat-error *ngIf="DeviceUnits.invalid">Unit is required.</mat-error>
-            </mat-form-field>
+            </mat-form-field> 
           </div>
         <div class="col-6 justify-content-end d-flex mb-2">
             <button mat-raised-button (click)="onNoClick()">Close</button>
