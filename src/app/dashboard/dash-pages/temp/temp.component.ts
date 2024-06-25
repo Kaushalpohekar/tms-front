@@ -4,7 +4,7 @@ import { EditDeviceComponent } from '../../dash-component/edit-device/edit-devic
 import { TriggerDeviceComponent } from '../../dash-component/trigger-device/trigger-device.component';
 import { DashDataService } from '../../dash-data-service/dash-data.service';
 import { AuthService } from '../../../login/auth/auth.service';
-import{ DashService } from '../../dash.service';
+import { DashService } from '../../dash.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { interval, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
