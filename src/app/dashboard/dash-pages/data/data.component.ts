@@ -188,7 +188,7 @@ export class DataComponent implements OnInit, OnDestroy {
       const [dataWS, data] = await Promise.all([dataWSPromise, dataPromise]);
       this.processChartData(data);
       if (dataWS) {
-        this.processChartDataWS(dataWS);
+        this.processChartDataWS(dataWS.data);
       }
       this.router.navigate([this.router.url]);
 
@@ -793,19 +793,28 @@ export class DataComponent implements OnInit, OnDestroy {
   }
 
   processChartDataWS(response: any) {
-    const data = response.data;
+    this.consumptionData = [];
+    const data = response;
     const istOffset = 5.5 * 60 * 60 * 1000; // IST offset: +5:30 in milliseconds
 
     let intervalConsumption = 0;
-    this.consumptionData = data.map((entry: any) => {
-      intervalConsumption += entry.totalVolume; // Add current volume to total
-      const fixedTotalVolume = entry.totalVolume.toFixed(2); // Fixing to 2 decimal places
-      return [
-        new Date(entry.TimeStamp).getTime() + istOffset,
-        parseFloat(fixedTotalVolume), // Parse to float to ensure it's a number
-      ];
-    });
+    this.consumptionData = data.map((entry: any, index: number) => {
+      let totalVolume = entry.totalVolume;
 
+      if (totalVolume != null && !isNaN(totalVolume)) {
+          intervalConsumption += totalVolume;
+          const fixedTotalVolume = parseFloat(totalVolume.toFixed(2));
+          return [
+              new Date(entry.TimeStamp).getTime() + istOffset,
+              fixedTotalVolume,
+          ];
+      } else {
+          return [
+              new Date(entry.TimeStamp).getTime() + istOffset,
+              null,
+          ];
+      }
+    });
     this.DeviceIntervalConsumption = intervalConsumption;
     this.createBarGraph();
   }
